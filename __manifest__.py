@@ -24,6 +24,7 @@
 
     # always loaded
     'data': [
+        'security/ir.model.access.csv',
         'views/inscription.xml',
         'data/email_template.xml',
         'data/cron.xml',
