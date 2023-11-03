@@ -11,6 +11,7 @@
               <field name="present"/>
               <field name="note_sem1"/>
               <field name="note_sem2"/>
+              <field name="session_stored"/>
               <field name="mention"/>
               <field name="validation"/>
             </tree>
