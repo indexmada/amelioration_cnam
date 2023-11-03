@@ -1,0 +1,31 @@
+<odoo>
+  <data>
+
+    <record id="recap_engagement_form" model="ir.ui.view">
+        <field name="name">Tableau Recap. Engagement</field>
+        <field name="model">recap.engagement</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="school_year"/>
+                </group>
+                <footer>
+                    <button name="generate_report" type="object" string="Exporter" class="btn-primary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="recap_engagement_action" name="Tableau Recap. Engagement" res_model="recap.engagement" view_mode="form"
+                target="new"/>
+
+
+    <menuitem id="recap_engagement"
+              name="Tableau Recap. Engagement"
+              parent="edu_management.menu_schooling"
+              sequence="4"
+              action="recap_engagement_action"/>
+
+  </data>
+</odoo>

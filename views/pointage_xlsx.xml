@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="pointage_ue_action" model="ir.actions.server">
+        <field name="name">Suivi Présence (Excel)</field>
+        <field name="model_id" ref="edu_management.model_regrouping_center_line"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.export_pointage_ue()
+        </field>
+    </record>
+
+    <record id="regrouping_edu_form" model="ir.ui.view">
+        <field name="name">RegroupingFormInherit</field>
+        <field name="model">regrouping.center</field>
+        <field name="inherit_id" ref="edu_management.regrouping_edu_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[last()]" position="after">
+                <field name="tutor_attendance" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>
