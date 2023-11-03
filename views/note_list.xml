@@ -1,0 +1,31 @@
+<odoo>
+  <data>
+    <record id="note_list_view_list" model="ir.ui.view">
+        <field name="name">NoteListeListView</field>
+        <field name="model">note.list</field>
+        <field name="arch" type="xml">
+            <tree>
+              <field name="code_ue_stored"/>
+              <field name="intitule_ue_stored"/>
+              <field name="years_id"/>
+              <field name="present"/>
+              <field name="note_sem1"/>
+              <field name="note_sem2"/>
+              <field name="mention"/>
+              <field name="validation"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="note_edu_filter_search_inherit" model="ir.ui.view">
+        <field name="name">NoteListSearchInherit</field>
+        <field name="model">note.list</field>
+        <field name="inherit_id" ref="edu_management.note_edu_filter_search"/>
+        <field name="arch" type="xml">
+          <field name="years_id" position="after">
+            <filter name="groupe_by_ue" string="UE" context="{'group_by': 'unit_enseigne'}"/>
+          </field>
+        </field>
+    </record>
+  </data>
+</odoo>

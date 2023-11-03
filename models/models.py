@@ -131,4 +131,5 @@ class InscriptionEdu(models.Model):
             'res_model': 'note.list',
             'type': 'ir.actions.act_window',
             "domain": [('id', 'in', note_list_ids.ids)],
+            "context": {'search_default_groupe_by_ue': 1},
         }

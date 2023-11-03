@@ -32,5 +32,6 @@
         'data/groups.xml',
         'views/pointage_xlsx.xml',
         'views/engagement.xml',
+        'views/note_list.xml',
     ],
 }
