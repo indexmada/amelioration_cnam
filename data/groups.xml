@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Pré-inscription -> Validé Accueil -->
         <record id="group_ue_validator" model="res.groups">
-            <field name="name">Validateur UE</field>
+            <field name="name">Validateur UE: Pré-inscription -> Validé Accueil</field>
+        </record>
+
+        <!-- Validé Accueil -> Validé Comptable -->
+        <record id="group_ue_validator_compta" model="res.groups">
+            <field name="name">Validateur UE: validé Accueil -> Validé Comptable</field>
+        </record>
+
+        <!-- Validé Comptable -> Validé enf -->
+        <record id="group_ue_validator_enf" model="res.groups">
+            <field name="name">Validateur UE: validé Comptable -> Validé ENF</field>
         </record>
     </data>
 </odoo>

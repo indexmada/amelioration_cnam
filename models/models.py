@@ -26,8 +26,21 @@ class UnitEnseigneConfig(models.Model):
 
     def compute_groupes(self):
         for rec in self:
-            if self.env.user.has_group('amelioration_cnam.group_ue_validator'):
-                rec.is_allowed_group_user = True
+            if rec.ue_state == "pre-inscription":
+                if self.env.user.has_group('amelioration_cnam.group_ue_validator'):
+                    rec.is_allowed_group_user = True
+                else:
+                    rec.is_allowed_group_user = False
+            elif rec.ue_state == "accueil":
+                if self.env.user.has_group('amelioration_cnam.group_ue_validator_compta'):
+                    rec.is_allowed_group_user = True
+                else:
+                    rec.is_allowed_group_user = False
+            elif rec.ue_state == "account":
+                if self.env.user.has_group('amelioration_cnam.group_ue_validator_enf'):
+                    rec.is_allowed_group_user = True
+                else:
+                    rec.is_allowed_group_user = False
             else:
                 rec.is_allowed_group_user = False
 
@@ -106,3 +119,16 @@ class InscriptionEdu(models.Model):
                 with self.env.cr.savepoint():
                     template.with_context(context).send_mail(insc.id, force_send=True, raise_exception=True)
                     values = template.generate_email(insc.id)
+
+    def open_student_info(self):
+        if not self.student_id:
+            return False
+
+        note_list_ids = self.env['note.list'].search([('partner_id', '=', self.student_id.id)])
+        return {
+            "name": "Historique Cursus",
+            'view_mode': 'list',
+            'res_model': 'note.list',
+            'type': 'ir.actions.act_window',
+            "domain": [('id', 'in', note_list_ids.ids)],
+        }
