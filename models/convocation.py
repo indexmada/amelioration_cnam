@@ -56,7 +56,7 @@ class ConvocationList(models.Model):
 					'session_name': "Première" if convocation.exam_calandar_id_stored.session.name.find('1')>0 else "Deuxième"
 				}
 				with self.env.cr.savepoint():
-					template.with_context(context).send_mail(convocation.id, force_send=False, raise_exception=True)
+					template.with_context(context).send_mail(convocation.id, force_send=True, raise_exception=True)
 					values = template.generate_email(convocation.id)
 
 	@api.onchange("number_convocation", "inscription_id", "fonmation_id", "auditor_number", "address_name", "school_year")
