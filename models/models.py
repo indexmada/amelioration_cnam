@@ -117,7 +117,7 @@ class InscriptionEdu(models.Model):
                     'student_id': insc.student_id,
                 }
                 with self.env.cr.savepoint():
-                    template.with_context(context).send_mail(insc.id, force_send=True, raise_exception=True)
+                    template.with_context(context).send_mail(insc.id, force_send=False, raise_exception=True)
                     values = template.generate_email(insc.id)
 
     def open_student_info(self):

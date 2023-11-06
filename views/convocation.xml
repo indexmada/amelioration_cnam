@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record model="ir.ui.view" id="view_convocation_search_inherit">
+        <field name="name">convocation.list.search.inherit</field>
+        <field name="model">convocation.list</field>
+        <field name="inherit_id" ref="edu_management.view_convocation_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter" position="after">
+                <field name="exam_calandar_id_stored"/>
+                <filter name="group_by_calandar" string="Calendrier d'examen" context="{'group_by': 'exam_calandar_id_stored'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="edu_management.convocation_list_action" model="ir.actions.act_window">
+    	<field name="context">{'search_default_group_by_calandar':1}</field>
+    </record>
+
+    <record id="send_convocation_by_email_action_server" model="ir.actions.server">
+        <field name="name">Envoyer par email</field>
+        <field name="model_id" ref="edu_management.model_convocation_list"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.send_convocation_by_email()
+        </field>
+    </record>
+
+</odoo>

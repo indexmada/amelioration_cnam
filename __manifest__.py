@@ -33,5 +33,7 @@
         'views/pointage_xlsx.xml',
         'views/engagement.xml',
         'views/note_list.xml',
+        "views/convocation.xml",
+        "views/convocation_template.xml",
     ],
 }
