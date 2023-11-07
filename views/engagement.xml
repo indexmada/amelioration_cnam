@@ -53,6 +53,7 @@
                 <field name="cost_devise"/>
                 <field name="amount_paid_payment" string="Paiement"/>
                 <field name="remain_to_pay_payment"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
