@@ -1,0 +1,26 @@
+<odoo>
+	<data>
+		<menuitem id="menu_suivi_history"
+            name="Suivi &amp; Historique"
+            parent="edu_management.menu_education"
+            sequence="2"/>
+
+        <menuitem id="recap_engagement"
+            name="Tableau Recap. Engagement"
+            parent="menu_suivi_history"
+            sequence="1"
+            action="amelioration_cnam.recap_engagement_action"/>
+
+        <menuitem id="menu_payment_insc_ar"
+            name="Historique Engagement Ar"
+            parent="menu_suivi_history"
+            sequence="5"
+            action="amelioration_cnam.payment_insc_ar_action"/>
+
+        <menuitem id="menu_payment_insc_eur"
+            name="Historique Engagement Euro"
+            parent="menu_suivi_history"
+            sequence="6"
+            action="amelioration_cnam.payment_insc_eur_action"/>
+	</data>
+</odoo>

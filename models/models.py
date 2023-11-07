@@ -92,6 +92,8 @@ class InscriptionEdu(models.Model):
     residence = fields.Boolean("Certificat de résidence")
     ves = fields.Boolean("Pour VES: joindre le programme détaillé de la formation suivie")
 
+    insc_demande_report = fields.Boolean("Demande report")
+
     def send_mail_file_required(self):
         domain = ['|','|','|','|','|','|','|',('degree_certified', '=', False), ('cv_lm', '=', False), 
                     ('job_certificate', '=', False), ('recent_id_photo', '=', False), ('a4_enveloppes', '=', False), 

@@ -22,6 +22,27 @@ class AmeliorationCnam(http.Controller):
 
         return "INSC STATE UPDATED"
 
+    @http.route('/amelioration_cnam/update_pay_insc_state', auth='public')
+    def update_pay_insc_state(self, **kw):
+        records = request.env['payment.inscription'].search([('inscription_id', '!=', False)])
+        for rec in records:
+            state = None
+            if not rec.state:
+                if rec.remain_to_pay_payment <= 0:
+                    state = 'paid'
+                else:
+                    if rec.inscription_id.insc_demande_report == True and rec.report_date:
+                        if rec.report_granted:
+                            state = 'granted'
+                        else:
+                            state = 'request'
+                    else:
+                        state = 'non-paid'
+            rec.write({'state': state})
+        
+
+        return "PAY INSC STATE UPDATED"
+
     @http.route('/export_pointage_ue', auth='public')
     def download_suivi_presence_file_excel(self, file_name, id_tab=''):  #
         output = io.BytesIO()

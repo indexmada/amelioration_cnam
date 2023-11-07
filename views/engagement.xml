@@ -27,5 +27,67 @@
               sequence="4"
               action="recap_engagement_action"/>
 
+    <!-- Historique Engagement Ariary -->
+    <record id="inscription_payment_pivot" model="ir.ui.view">
+        <field name="name">payment.inscription.pivot</field>
+        <field name="model">payment.inscription</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="year_stored" type="col"/>
+                <field name="month_stored" type="col"/>
+                <field name="inscription_id" type="row"/>
+                <field name="cost_devise" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="inscription_payment_tree" model="ir.ui.view">
+        <field name="name">payment.inscription.tree</field>
+        <field name="model">payment.inscription</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="num_engagement"/>
+                <field name="name"/>
+                <field name="inscription_id" string="Etudiant"/>
+                <field name="date"/>
+                <field name="cost_devise"/>
+                <field name="amount_paid_payment" string="Paiement"/>
+                <field name="remain_to_pay_payment"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="inscription_payment_search" model="ir.ui.view">
+        <field name="name">payment.inscription.search</field>
+        <field name="model">payment.inscription</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="num_engagement"/>
+                <field name="name"/>
+                <field name="inscription_id" string="Etudiant"/>
+                <field name="state"/>
+                <filter name="statut_group_by" string="Statut" context="{'group_by': 'state'}"/>
+                <filter name="inscription_id_group_by" string="Etudiant" context="{'group_by': 'inscription_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="payment_insc_ar_action" model="ir.actions.act_window">
+        <field name="name">Historique Engagement Ariary</field>
+        <field name="res_model">payment.inscription</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_id" ref="inscription_payment_pivot"/>
+        <field name="context">{}</field>
+        <field name="domain">[('currency_id.name', '=', 'MGA'), ('inscription_id', '!=', False)]</field>
+    </record>
+    
+    <record id="payment_insc_eur_action" model="ir.actions.act_window">
+        <field name="name">Historique Engagement Euro</field>
+        <field name="res_model">payment.inscription</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_id" ref="inscription_payment_pivot"/>
+        <field name="context">{}</field>
+        <field name="domain">[('currency_id.name', '=', 'EUR'), ('inscription_id', '!=', False)]</field>
+    </record>
   </data>
 </odoo>
