@@ -36,5 +36,6 @@
         "views/convocation.xml",
         "views/convocation_template.xml",
         "views/menu_suivi_history.xml",
+        "views/engagement_report.xml",
     ],
 }

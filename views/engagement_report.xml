@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<template id="le_report_inherit" inherit_id="index_custom_cnam.le_report">
+			<xpath expr="//div[hasclass('page')]/h3[1]" position="replace">
+				<h3 class="text-center" style="font-weight:bolder;">N° <t t-esc="o.get_num_engagement()"/></h3>
+			</xpath>
+		</template>
+
+
+	</data>
+</odoo>

@@ -47,6 +47,7 @@
             <field name="state"/>
         </xpath>
         <xpath expr="//page[@name='payment']/group/field[@name='amount_total_ariary']" position="before">
+            <field name="num_engagement"/>
             <field name="insc_demande_report"/>
         </xpath>
       </field>

@@ -94,6 +94,8 @@ class InscriptionEdu(models.Model):
 
     insc_demande_report = fields.Boolean("Demande report")
 
+    num_engagement = fields.Integer("Numéro Engagement")
+
     def send_mail_file_required(self):
         domain = ['|','|','|','|','|','|','|',('degree_certified', '=', False), ('cv_lm', '=', False), 
                     ('job_certificate', '=', False), ('recent_id_photo', '=', False), ('a4_enveloppes', '=', False), 
@@ -135,3 +137,30 @@ class InscriptionEdu(models.Model):
             "domain": [('id', 'in', note_list_ids.ids)],
             "context": {'search_default_groupe_by_ue': 1},
         }
+
+
+    @api.model
+    def create(self, vals):
+        res = super(InscriptionEdu, self).create(vals)
+        if not vals.get('num_engagement'):
+            result = max(self.env['inscription.edu'].search([]).mapped('num_engagement'))
+            print('_'*100)
+            print(result)
+            if result:
+                num_engagement = result + 1
+            else:
+                num_engagement = 1
+            print(num_engagement)
+            res['num_engagement'] = num_engagement
+        return res
+
+    def get_num_engagement(self):
+        num = self.num_engagement
+        num_str = ''
+        ln = len(str(num))
+        if ln < 4:
+            for i in range(0, 4-ln):
+                num_str += '0'
+
+        num_str += str(num)
+        return num_str
