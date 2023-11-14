@@ -54,9 +54,10 @@
     color: black;
     font-weight: bold;
     text-align: center;
+    top: 0;
 }
 
-#result div {
+#result>div {
     background: white;
     border-radius: 10px;
     width: 50%;
@@ -64,4 +65,23 @@
     opacity: 1;
     padding: 10px;
     color: black;
+}
+
+.table--resultats-examens {
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.table--resultats-examens th {
+    padding: 10px;
+    border: 1px solid #bbb;
+    background-color: #ddd;
+    white-space: nowrap;
+}
+
+.table--resultats-examens th {
+    padding: 10px;
+    border: 1px solid #bbb;
+    background-color: #ddd;
+    white-space: nowrap;
 }

@@ -27,6 +27,14 @@ class AmeliorationCnam(http.Controller):
         year_id = request.env['school.year'].sudo().browse(year)
         return request.render('amelioration_cnam.result_template', {'year': year_id})
 
+    @http.route('/show_result_content/<int:year>/<str:session>/<int:ue_id>', auth='public')
+    def show_result_content(self, year, session, ue_id):
+        ue_name = request.env['unit.enseigne.config'].sudo().browse(ue_id).display_name
+        note_list_filter_ids = request.env['note.list.filter'].sudo().search([('year', '=', year), ('unit_enseigne', '=', ue_id)]).filtered(lamnda x: x.session.name.find(str(session)) >= 0)
+        result_ids = note_list_filter_ids.mapped('note_list_ids')
+        vals = {'note_list_ids': result_ids, 'ue_name': ue_name}
+        return request.render('amelioration_cnam.result_content_template', vals)
+
     @http.route('/amelioration_cnam/update_pay_insc_state', auth='public')
     def update_pay_insc_state(self, **kw):
         records = request.env['payment.inscription'].search([('inscription_id', '!=', False)])
