@@ -19,3 +19,10 @@ class NoteList(models.Model):
 	def compute_session_value(self):
 		for record in self:
 			record.session_stored = record.note_list_filter_id.session.name
+
+class NoteListFilter(models.Model):
+	_inherit = "note.list.filter"
+
+	def get_ue_ids(self, session = 1, year):
+		result = self.sudo()search([('year', '=', year)]).filtered(lambda x: x.session.name.find(session) >= 0).mapped('unit.enseigne')
+		return result
