@@ -6,3 +6,7 @@ function show_result(year_id, session, ue_id) {
     $("#result").css("display", "flex");
     $("#result_content").load('/show_result_content/'+year_id+'/'+session+'/'+ue_id);
 }
+
+function hide_content() {
+    $("result").css("display", "none");
+}

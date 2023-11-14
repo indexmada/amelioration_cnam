@@ -88,3 +88,18 @@
     background-color: #ddd;
     white-space: nowrap;
 }
+
+.hide_content {
+    float: right;
+    top: 0;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    width: 15px;
+    height: 15px;
+    transform: rotate(45deg);
+    font-size: 25px;
+    color: #c5bbbb;
+    font-weight: 500;
+    cursor: pointer;
+}

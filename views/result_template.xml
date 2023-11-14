@@ -22,6 +22,7 @@
                   </div>
 		</template>
 		<template id="result_content_template" name="result content template">
+			<div class="hide_content" onclick="hide_content()">+</div>
 			<div>
 				<h3 t-esc="ue_name"/>
 				<div>
