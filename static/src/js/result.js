@@ -8,5 +8,5 @@ function show_result(year_id, session, ue_id) {
 }
 
 function hide_content() {
-    $("result").css("display", "none");
+    $("result").hide();
 }
