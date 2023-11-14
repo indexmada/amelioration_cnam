@@ -1,0 +1,18 @@
+.box-planning {
+    background-color: var(--grey-light);
+    background-color: #fff !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+.box-planning__header {
+    padding: 20px 30px !important;
+    border-bottom: 1px solid #ddd !important;
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+}
+
+.box-planning__content {
+    padding: 30px !important;
+    padding-top: 0 !important;
+}
