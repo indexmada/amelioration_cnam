@@ -22,7 +22,7 @@ class AmeliorationCnam(http.Controller):
 
         return "INSC STATE UPDATED"
 
-    @http.route('/load_ue_section_by_year/<int: year>', auth='public')
+    @http.route('/load_ue_section_by_year/<int:year>', auth='public')
     def load_ue_section_by_year(self, year):
         year_id = request.env['school.year'].sudo().browse(year)
         return "Ok"
