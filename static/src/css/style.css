@@ -41,13 +41,12 @@
     cursor: pointer;
 }
 
-#id {
+#result {
     z-index: 999;
     position: fixed;
     width: 100%;
     height: 100%;
-    background: black;
-    opacity: .6;
+    background: #0006;
     display: none;
     align-items: center;
     justify-content: center;
@@ -55,4 +54,14 @@
     color: black;
     font-weight: bold;
     text-align: center;
+}
+
+#result div {
+    background: white;
+    border-radius: 10px;
+    width: 50%;
+    height: 70%;
+    opacity: 1;
+    padding: 10px;
+    color: black;
 }
