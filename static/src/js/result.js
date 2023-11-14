@@ -1,3 +1,3 @@
 function year_clicked(year_id) {
-    console.log('sdfsdf');
+    $("#ue_section").load('/load_ue_section_by_year/'+year_id)
 }
