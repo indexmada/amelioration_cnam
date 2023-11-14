@@ -16,3 +16,23 @@
     padding: 30px !important;
     padding-top: 0 !important;
 }
+
+.box-planning__content li {
+    display: block !important;
+    position: relative !important;
+    padding: 10px 0 10px 0 !important;
+    line-height: 2.2rem !important;
+    list-style: none;
+}
+
+.resultats-examens--liste-ue {
+    display: flex;
+    row-gap: 0px;
+    flex-wrap: wrap;
+}
+
+.resultats-examens--liste-ue a {
+    display: block;
+    width: 140px;
+    cursor: pointer;
+}
