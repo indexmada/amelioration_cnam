@@ -12,6 +12,7 @@
     <template id="assets_login" inherit_id="web.assets_frontend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/amelioration_cnam/static/src/css/style.css"/>
+            <script type="text/javascript" src="/amelioration_cnam/static/src/js/result.js"/>
         </xpath>
     </template>
 

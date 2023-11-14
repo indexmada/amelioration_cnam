@@ -17,6 +17,10 @@
     padding-top: 0 !important;
 }
 
+.box-planning__content a{
+    cursor: pointer;
+}
+
 .box-planning__content li {
     display: block !important;
     position: relative !important;
