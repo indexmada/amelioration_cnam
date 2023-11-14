@@ -65,11 +65,14 @@
     opacity: 1;
     padding: 10px;
     color: black;
+    overflow: scroll;
+    overflow-x: hidden
 }
 
 .table--resultats-examens {
     border-collapse: collapse;
     min-width: 600px;
+    font-size: 10px;
 }
 
 .table--resultats-examens th {
