@@ -25,7 +25,7 @@ class AmeliorationCnam(http.Controller):
     @http.route('/load_ue_section_by_year/<int:year>', auth='public')
     def load_ue_section_by_year(self, year):
         year_id = request.env['school.year'].sudo().browse(year)
-        return "Ok"
+        return request.render('amelioration_cnam.result_template', {'year': year_id})
 
     @http.route('/amelioration_cnam/update_pay_insc_state', auth='public')
     def update_pay_insc_state(self, **kw):
