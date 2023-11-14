@@ -8,5 +8,6 @@ function show_result(year_id, session, ue_id) {
 }
 
 function hide_content() {
-    $("result").hide();
+    console.log('hide');
+    $("result").css("display", "none");
 }
