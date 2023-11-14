@@ -24,5 +24,5 @@ class NoteListFilter(models.Model):
 	_inherit = "note.list.filter"
 
 	def get_ue_ids(self, year, session = 1):
-		result = self.sudo().search([('year', '=', year)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit.enseigne')
+		result = self.sudo().search([('year', '=', year)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit_enseigne')
 		return result
