@@ -30,7 +30,7 @@ class AmeliorationCnam(http.Controller):
     @http.route('/show_result_content/<int:year>/<str:session>/<int:ue_id>', auth='public')
     def show_result_content(self, year, session, ue_id):
         ue_name = request.env['unit.enseigne.config'].sudo().browse(ue_id).display_name
-        note_list_filter_ids = request.env['note.list.filter'].sudo().search([('year', '=', year), ('unit_enseigne', '=', ue_id)]).filtered(lamnda x: x.session.name.find(str(session)) >= 0)
+        note_list_filter_ids = request.env['note.list.filter'].sudo().search([('year', '=', year), ('unit_enseigne', '=', ue_id)]).filtered(lambda x: x.session.name.find(str(session)) >= 0)
         result_ids = note_list_filter_ids.mapped('note_list_ids')
         vals = {'note_list_ids': result_ids, 'ue_name': ue_name}
         return request.render('amelioration_cnam.result_content_template', vals)
