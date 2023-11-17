@@ -55,5 +55,29 @@
 				</div>
 			</div>
 		</template>
+
+		<!-- PDF Relevé de note -->
+		<template id="rel_note_report_inherit" inherit_id="index_custom_cnam.rel_note_report">
+			<xpath expr="//table[@id='tab_result']" position="replace">
+					<table id="tab_result" class="table table-bordered">
+            <tr>
+                <td style="border: 1px solid black;">Unités</td>
+                <td style="border: 1px solid black;">Session 1</td>
+                <td style="border: 1px solid black;">Session 2</td>
+            </tr>
+            <tr>
+
+            <t t-foreach="notes" t-as="note">
+                <tr t-if="note.mention != 'defaillant' and note.note_2set != True">
+                    <td style="border: 1px solid black;"><t t-esc="note.unit_enseigne.display_name"/></td>
+                    <td style="border: 1px solid black;"><t t-esc="note.note_session1"/></td>
+                    <td style="border: 1px solid black;"><t t-esc="note.note_session2"/></td>
+                </tr>
+            </t>
+
+            </tr>
+        </table>
+			</xpath>
+		</template>
 	</data>
 </odoo>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- Relevé de note -->
+        <template id="attestation">
+            <t t-call="web.html_container">
+                <t t-call="edu_management.internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="o" t-value="o.with_context(lang=lang)" />
+                        <t t-if="not company">
+                            <!-- Multicompany -->
+                            <t t-if="company_id">
+                                <t t-set="company" t-value="company_id"/>
+                            </t>
+                            <t t-elif="o and 'company_id' in o">
+                                <t t-set="company" t-value="o.company_id.sudo()"/>
+                            </t>
+                            <t t-else="else">
+                                <t t-set="company" t-value="res_company"/>
+                            </t>
+                        </t>
+                        <t t-set="notes" t-value="env['note.list'].sudo().get_all_note_by_student_by_year(o.sudo().partner_id.id,o.sudo().note_list_filter_id.year.id)"/>
+                            <div t-if="notes" class="page" style="font-family: 'arial';">
+                                <strong><u> Réf :</u></strong>
+                                <div class="text-center"><h4><strong>  ATTESTATION DE REUSSITE  </strong></h4></div>
+                                <br/>
+                                <div> Le Directeur du centre <strong>C</strong>onservatoire <strong>N</strong>ational des <strong>A</strong>rts et <strong>M</strong>étiers Madagascar atteste que:
+                                </div>
+                                <br/>
+
+                                <t t-set="insc" t-value="o.get_insc()"/>
+
+                                <div style="margin-top: 10px;">
+                                    <table style="width: 100%;">
+                                        <tr style="height: 27px;">
+                                            <td>
+                                                <t t-if="insc.civilite == 'mll'">Mademoiselle: </t>
+                                                <t t-if="insc.civilite == 'mme'">Madame: </t>
+                                                <t t-else="">Monsieur: </t>
+                                            </td>
+                                            <td>
+                                                <strong t-esc="insc.display_name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr style="height: 27px;">
+                                            <td>
+                                                <t t-if="insc.civilite != 'mr'">Née le: </t>
+                                                <t t-else="">Né le: </t>
+                                            </td>
+                                            <td>
+                                                <t t-esc="o.date_of_birth"/>
+                                            </td>
+                                        </tr>
+                                        <tr style="height: 27px;">
+                                            <td>
+                                                <t t-if="insc.civilite != 'mr'">Inscrite au diplôme :  </t>
+                                                <t t-else="">Inscrit au diplôme :  </t>
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    <t t-esc="insc.formation_id.name"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br/>
+                                <div>
+                                    A validé toutes les Unités d'Enseignements composants son cursus suivantes:
+                                </div>
+                                <br/>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td style="border: 1px solid black;"><strong>N° UE</strong></td>
+                                        <td style="border: 1px solid black;"><strong>Intitulé</strong></td>
+                                        <td style="border: 1px solid black;"><strong>ECTS</strong></td>
+                                        <td style="border: 1px solid black;"><strong>Année d'obtention</strong></td>
+                                        <td style="border: 1px solid black;"><strong>Note /20</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <t t-foreach="notes" t-as="note">
+                                            <tr>
+                                                <td style="border: 1px solid black;">
+                                                    <t t-esc="note.note_list_filter_id.unit_enseigne.code"/>
+                                                </td>
+                                                <td style="border: 1px solid black;">
+                                                    <t t-esc="note.note_list_filter_id.unit_enseigne.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;">
+                                                    <t t-esc="note.note_list_filter_id.unit_enseigne.ects"/>
+                                                </td>
+                                                <td style="border: 1px solid black;">
+                                                    <t t-esc="note.years_id.name"></t>
+                                                </td>
+                                                <td style="border: 1px solid black;">
+                                                    <t t-esc="note.note_session2 or note.note_session1"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+
+                                    </tr>
+                                </table>
+
+                                <br/>
+                                <div>
+                                    Cette attestation lui est délivré pour lui servir et valoir ce que de droit.
+                                </div>
+                                <div class="row">
+                                    <div class="offset-8  text-center">Antananarivo, le
+                                        <span t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/>
+                                        <br/><br/>
+                                        Pour l'Administratrice Générale et par délégation
+                                        <div>
+                                          <img t-if="company.sign_director and company.pdf_display_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+                                          <div t-else="min-height:150px;"/>
+                                        </div>
+                                    <br/>
+                                    Le Directeur du centre<br/>
+                                    Jocelyn RASOANAIVO
+                                     </div>
+                                </div>
+                            </div>
+                            <p style="page-break-after:always"/>
+                    </t>  
+                </t>          
+            </t>
+        </template>
+
+        <report
+                id="attestation_report"
+                model="note.list"
+                string="Attestation de réussite"
+                report_type="qweb-pdf"
+                name="amelioration_cnam.attestation"
+                file="amelioration_cnam.attestation"
+            />
+
+        </data>
+    </odoo>
