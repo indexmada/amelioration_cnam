@@ -96,6 +96,11 @@ class InscriptionEdu(models.Model):
 
     num_engagement = fields.Integer("Numéro Engagement")
 
+    # lettre d'engagement Signature
+    le_sign = fields.Boolean("Signature Lettre d'engagement")
+    # Certificat de scolarité Signature
+    cs_sign = fields.Boolean("Signature Certificat de scolarité")
+
     def send_mail_file_required(self):
         domain = ['|','|','|','|','|','|','|',('degree_certified', '=', False), ('cv_lm', '=', False), 
                     ('job_certificate', '=', False), ('recent_id_photo', '=', False), ('a4_enveloppes', '=', False), 

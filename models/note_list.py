@@ -13,6 +13,10 @@ class NoteList(models.Model):
 	note_session2 = fields.Float("Note Session2", compute="compute_note_session")
 	note_2set = fields.Boolean(string="Session 2 Set", compute="compute_note_2set", store=True)
 
+	# Signature Director
+	attest_sign = fields.Boolean("Signature Attestation")
+	rel_sign = fields.Boolean("Signature Relevé de note")
+
 	@api.depends('session_stored', 'note_session1', 'note_session2')
 	def compute_note_2set(self):
 		for rec in self:
@@ -59,6 +63,18 @@ class NoteList(models.Model):
 	def get_insc(self):
 		insc_id = self.env['inscription.edu'].sudo().search([('student_id', '=', self.partner_id.id)], order="id DESC", limit=1)
 		return insc_id
+
+	def open_results_data(self):
+		self.search([]).compute_note_2set()
+		return {
+                'type': 'ir.actions.act_window',
+                'name':'Résultats',
+                'res_model': 'note.list',
+                'view_mode': 'tree',
+                'view_id': self.env.ref('amelioration_cnam.view_note_list_tree_session').id,
+                'domain': [('note_2set', '=', False)],
+                'target': 'current',
+            }
 
 class NoteListFilter(models.Model):
 	_inherit = "note.list.filter"

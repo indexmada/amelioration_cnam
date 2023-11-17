@@ -10,6 +10,8 @@ class ConvocationList(models.Model):
 
 	exam_calandar_id_stored = fields.Many2one(string="Calendrier d'Examen", comodel_name="exam.calandar", compute="compute_exam_calandar", store=True)
 
+	conv_sign = fields.Boolean("Signature Directeur")
+
 	@api.depends("exam_ids", "exam_ids.exam_calandar_id")
 	def compute_exam_calandar(self):
 		for record in self:

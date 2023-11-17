@@ -8,6 +8,9 @@
 				<span t-if="o.exam_calandar_id_stored.show_text_about_convoc == True" style="margin-left:40px;">Pour les UE du second semestre, les notes de la première session seront publiées au fur et à mesure des corrections des enseignants. <br/></span>
 				<span t-if="o.exam_calandar_id_stored.show_text_about_convoc == True" style="margin-left:40px;">Dans le cas où vous validerez l’(es) UE, veuillez ne pas tenir compte des dates et heures des épreuves mentionnées dans les convocations.</span>
 			</xpath>
+			<xpath expr="//img" position="replace">
+				<img t-if="company.sign_director and o.conv_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+			</xpath>
 		</template>
 
 

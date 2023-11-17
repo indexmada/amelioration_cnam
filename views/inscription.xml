@@ -20,6 +20,13 @@
                     <field name="ves"/>
                 </group>
             </page>
+            <page name="director_sign" string="Signature Documents">
+                <group>
+                    <h2>Signature dans les documents</h2>
+                    <field name="le_sign"/>
+                    <field name="cs_sign"/>
+                </group>
+            </page>
         </xpath>
 
         <xpath expr="//page[@name='units_enseigne']/field/tree/field[last()]" position="after">

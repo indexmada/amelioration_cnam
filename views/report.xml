@@ -113,7 +113,7 @@
                                         <br/><br/>
                                         Pour l'Administratrice Générale et par délégation
                                         <div>
-                                          <img t-if="company.sign_director and company.pdf_display_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+                                          <img t-if="company.sign_director and o.attest_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
                                           <div t-else="min-height:150px;"/>
                                         </div>
                                     <br/>
@@ -136,6 +136,35 @@
                 name="amelioration_cnam.attestation"
                 file="amelioration_cnam.attestation"
             />
+
+
+    <!-- Signature dans les Documents -->
+        <!-- Lettre d'engagement -->
+        <template id="le_report_inherit" inherit_id="index_custom_cnam.le_report">
+            <xpath expr="//table/tr[2]/td[2]" position="replace">
+                <td class="text-center"><img t-if="company.sign_director and o.le_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/><div t-else="" style="min-height:130px;"/></td>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/h3[1]" position="replace">
+                <h3 class="text-center" style="font-weight:bolder;">N° <t t-esc="o.get_num_engagement()"/></h3>
+            </xpath>
+        </template>
+        <!-- Certificat de scolarité -->
+        <template id="report_certificat_scolarite_inherit" inherit_id="edu_management.report_certificat_scolarite">
+            <xpath expr="//div[1]/div[3]/div/div/img" position="replace">
+                <img t-if="company.sign_director and o.cs_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]" position="after">
+                <p style="page-break-after:always"/>
+            </xpath>
+        </template>
+        <!-- Attestation de réussite -->
+        <template id="att_re_report_inherit" inherit_id="index_custom_cnam.att_re_report">
+            <xpath expr="//img" position="replace">
+                <img t-if="company.sign_director and o.attest_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+            </xpath>
+        </template>
+        <!-- Relevé de note: /views/result_template.xml : rel_note_report_inherit -->
+
 
         </data>
     </odoo>

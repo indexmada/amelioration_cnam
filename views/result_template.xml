@@ -78,6 +78,10 @@
             </tr>
         </table>
 			</xpath>
+			<!-- Relevé de note -->
+			<xpath expr="//img" position="replace">
+				<img t-if="company.sign_director and o.rel_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+			</xpath>
 		</template>
 	</data>
 </odoo>

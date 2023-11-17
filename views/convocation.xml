@@ -25,4 +25,16 @@
         </field>
     </record>
 
+    <!-- Form -->
+    <record id="view_convocation_list_form" model="ir.ui.view">
+        <field name="name">ConvocationListInherit</field>
+        <field name="model">convocation.list</field>
+        <field name="inherit_id" ref="edu_management.view_convocation_list_form"/>
+        <field name="arch" type="xml">
+            <field name="school_year" position="after">
+                <field name="conv_sign"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>
