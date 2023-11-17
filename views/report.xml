@@ -29,24 +29,24 @@
                                 </div>
                                 <br/>
 
-                                <t t-set="insc" t-value="o.get_insc()"/>
+                                <t t-set="student" t-value="o.env['inscription.edu'].sudo().search([('student_id', '=', o.partner_id.id)], limit=1)"/>
 
                                 <div style="margin-top: 10px;">
                                     <table style="width: 100%;">
                                         <tr style="height: 27px;">
                                             <td>
-                                                <t t-if="insc.civilite == 'mll'">Mademoiselle: </t>
-                                                <t t-if="insc.civilite == 'mme'">Madame: </t>
+                                                <t t-if="student.civilite == 'mll'">Mademoiselle: </t>
+                                                <t t-if="student.civilite == 'mme'">Madame: </t>
                                                 <t t-else="">Monsieur: </t>
                                             </td>
                                             <td>
-                                                <strong t-esc="insc.display_name"/>
+                                                <strong t-esc="student.display_name"/>
                                             </td>
                                         </tr>
 
                                         <tr style="height: 27px;">
                                             <td>
-                                                <t t-if="insc.civilite != 'mr'">Née le: </t>
+                                                <t t-if="student.civilite != 'mr'">Née le: </t>
                                                 <t t-else="">Né le: </t>
                                             </td>
                                             <td>
@@ -55,12 +55,12 @@
                                         </tr>
                                         <tr style="height: 27px;">
                                             <td>
-                                                <t t-if="insc.civilite != 'mr'">Inscrite au diplôme :  </t>
+                                                <t t-if="student.civilite != 'mr'">Inscrite au diplôme :  </t>
                                                 <t t-else="">Inscrit au diplôme :  </t>
                                             </td>
                                             <td>
                                                 <strong>
-                                                    <t t-esc="insc.formation_id.name"/>
+                                                    <t t-esc="student.formation_id.name"/>
                                                 </strong>
                                             </td>
                                         </tr>
@@ -95,7 +95,7 @@
                                                     <t t-esc="note.years_id.name"></t>
                                                 </td>
                                                 <td style="border: 1px solid black;">
-                                                    <t t-esc="note.note_session2 or note.note_session1"/>
+                                                    <t t-esc="note.note_session2 if note.note_session2 > 0 else note.note_session1"/>
                                                 </td>
                                             </tr>
                                         </t>
