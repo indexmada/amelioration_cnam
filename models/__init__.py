@@ -7,3 +7,4 @@ from . import engagement
 from . import note_list
 from . import convocation
 from . import payment_inscription
+from . import exam
