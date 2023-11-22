@@ -71,26 +71,26 @@ class PaymentInscription(models.Model):
 				record.month_stored = False
 				record.year_stored = False
 
-	def create(self, vals):
-		if not vals.get('num_engagement'):
-			result = self.env['payment.inscription'].search([], limit = 1, order="num_engagement DESC")
-			if result:
-				num_engagement = result.num_engagement + 1
-			else:
-				num_engagement = 1
+	# def create(self, vals):
+	# 	if not vals.get('num_engagement'):
+	# 		result = self.env['payment.inscription'].search([], limit = 1, order="num_engagement DESC")
+	# 		if result:
+	# 			num_engagement = result.num_engagement + 1
+	# 		else:
+	# 			num_engagement = 1
 
-			vals['num_engagement'] = num_engagement
-		res = super(PaymentInscription, self).create(vals)
-		return res
+	# 		vals['num_engagement'] = num_engagement
+	# 	res = super(PaymentInscription, self).create(vals)
+	# 	return res
 
-	def write(self, vals):
-		if not vals.get('num_engagement'):
-			result = self.env['payment.inscription'].search([], limit = 1, order="num_engagement DESC")
-			if result:
-				num_engagement = result.num_engagement + 1
-			else:
-				num_engagement = 1
+	# def write(self, vals):
+	# 	if not vals.get('num_engagement'):
+	# 		result = self.env['payment.inscription'].search([], limit = 1, order="num_engagement DESC")
+	# 		if result:
+	# 			num_engagement = result.num_engagement + 1
+	# 		else:
+	# 			num_engagement = 1
 
-			vals['num_engagement'] = num_engagement
-		res = super(PaymentInscription, self).write(vals)
-		return res
+	# 		vals['num_engagement'] = num_engagement
+	# 	res = super(PaymentInscription, self).write(vals)
+	# 	return res
