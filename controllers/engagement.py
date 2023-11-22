@@ -213,7 +213,7 @@ class RecapEngagement(http.Controller):
 
             for insc in echelo:
                 cell = "A"+str(line)
-                worksheet_ost.write(cell, '', cell_center_12)
+                worksheet_ost.write(cell, insc.num_engagement, cell_center_12)
 
                 cell = "B"+str(line)
                 worksheet_ost.write(cell, insc.display_name, cell_center_12)
