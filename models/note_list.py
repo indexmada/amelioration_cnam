@@ -84,3 +84,11 @@ class NoteListFilter(models.Model):
 	def get_ue_ids(self, year, session = 1):
 		result = self.sudo().search([('year', '=', year), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit_enseigne')
 		return result
+
+	def check_show_in_website(self):
+		for note_list in self:
+			note_list.write({"show_in_website": True})
+
+	def uncheck_show_in_website(self):
+		for note_list in self:
+			note_list.write({"show_in_website": False})
