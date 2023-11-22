@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="check_le_sign" model="ir.actions.server">
+        <field name="name">Cocher Signature Lettre d'engagement</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.check_le_sign()
+        </field>
+    </record>
+
+    <record id="uncheck_le_sign" model="ir.actions.server">
+        <field name="name">Décocher Signature Lettre d'engagement</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.uncheck_le_sign()
+        </field>
+    </record>
+
+    <record id="check_cs_sign" model="ir.actions.server">
+        <field name="name">Cocher Signature Certificat de Scolarité</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.check_cs_sign()
+        </field>
+    </record>
+
+    <record id="uncheck_cs_sign" model="ir.actions.server">
+        <field name="name">Décocher Signature Certificat de Scolarité</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.uncheck_cs_sign()
+        </field>
+    </record>
+
+</odoo>

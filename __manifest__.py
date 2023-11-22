@@ -38,5 +38,6 @@
         "views/menu_suivi_history.xml",
         "views/result_template.xml",
         "views/report.xml",
+        "data/server_actions.xml",
     ],
 }

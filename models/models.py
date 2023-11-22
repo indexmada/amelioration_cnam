@@ -169,3 +169,19 @@ class InscriptionEdu(models.Model):
 
         num_str += str(num)
         return num_str
+
+    def check_le_sign(self):
+        for insc in self:
+            insc.write({'le_sign': True})
+
+    def uncheck_le_sign(self):
+        for insc in self:
+            insc.write({'le_sign': False})
+
+    def check_cs_sign(self):
+        for insc in self:
+            insc.write({'cs_sign': True})
+
+    def uncheck_cs_sign(self):
+        for insc in self:
+            insc.write({'cs_sign': False})
