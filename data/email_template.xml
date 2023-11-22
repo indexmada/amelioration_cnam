@@ -37,14 +37,30 @@
                     </div>
                     <div>
                         <ul>
-                            <li t-if="not object.degree_certified">Photocopie certifiée des diplômes</li>
-                            <li t-if="not object.cv_lm">CV et Lettre de motivation</li>
-                            <li t-if="not object.job_certificate">Attestation d'emploi et bulletin de salaire</li>
-                            <li t-if="not object.recent_id_photo">02 photographies d'identité récentes</li>
-                            <li t-if="not object.a4_enveloppes">4 enveloppes de format A4</li>
-                            <li t-if="not object.cin">Photocopie de la carte d'identité ou acte d'état civil (si mineur)</li>
-                            <li t-if="not object.residence">Certificat de résidence</li>
-                            <li t-if="not object.ves">Pour VES: joindre le programme détaillé de la formation suivie</li>
+                            %if not object.degree_certified
+                            <li>Photocopie certifiée des diplômes</li>
+                            %endif
+                            %if not object.cv_lm
+                            <li>CV et Lettre de motivation</li>
+                            %endif
+                            %if not object.job_certificate
+                            <li>Attestation d'emploi et bulletin de salaire</li>
+                            %endif
+                            %if not object.recent_id_photo
+                            <li>02 photographies d'identité récentes</li>
+                            %endif
+                            %if not object.a4_enveloppes
+                            <li>4 enveloppes de format A4</li>
+                            %endif
+                            %if not object.cin
+                            <li>Photocopie de la carte d'identité ou acte d'état civil (si mineur)</li>
+                            %endif
+                            %if not object.residence
+                            <li>Certificat de résidence</li>
+                            %endif
+                            %if not object.ves
+                            <li>Pour VES: joindre le programme détaillé de la formation suivie</li>
+                            %endif
                         </ul>
                     </div>
                     <br/><br/>
