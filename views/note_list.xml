@@ -23,6 +23,17 @@
         </field>
     </record>
 
+    <record id="view_note_list_filter_form_inherit" model="ir.ui.view">
+      <field name="name">NoteListFilterViewFormInherit</field>
+      <field name="model">note.list.filter</field>
+      <field name="inherit_id" ref="edu_management.view_note_list_filter_form"/>
+      <field name="arch" type="xml">
+        <field name="unit_enseigne" position="after">
+          <field name="show_in_website"/>
+        </field>
+      </field>
+    </record>
+
   <record id="view_note_list_tree_session" model="ir.ui.view">
         <field name="name">NoteListTreeInherit</field>
         <field name="model">note.list</field>

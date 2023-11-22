@@ -79,6 +79,8 @@ class NoteList(models.Model):
 class NoteListFilter(models.Model):
 	_inherit = "note.list.filter"
 
+	show_in_website = fields.Boolean("Afficher dans site web")
+
 	def get_ue_ids(self, year, session = 1):
-		result = self.sudo().search([('year', '=', year)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit_enseigne')
+		result = self.sudo().search([('year', '=', year), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit_enseigne')
 		return result
