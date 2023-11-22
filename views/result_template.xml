@@ -6,7 +6,7 @@
                 <div class="resultats-examens--liste-ue">
                   <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 1)"/>
                   <t t-foreach="ue_ids" t-as="ue">
-                    <a class="showResultsExams" t-att-data-ue="ue.code" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
+                    <a class="showResultsExams" t-att-data-ue="ue.code" t-att-onclick="'show_result('+str(year.id)+',1,'+str(ue.id)+')'" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
                   </t>
                   <br/>
                   <br/>
@@ -17,7 +17,7 @@
                   <div class="resultats-examens--liste-ue">
                     <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 2)"/>
                     <t t-foreach="ue_ids" t-as="ue">
-                      <a class="showResultsExams" t-att-data-ue="ue.code" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
+                      <a class="showResultsExams" t-att-data-ue="ue.code" t-att-onclick="'show_result('+str(year.id)+',2,'+str(ue.id)+')'" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
                     </t>
                   </div>
 		</template>
