@@ -42,5 +42,6 @@
         "views/config_settings.xml",
         "views/portal_template.xml",
         "views/training_edu.xml",
+        "views/certificat_scolarite.xml",
     ],
 }

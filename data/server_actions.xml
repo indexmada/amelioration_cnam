@@ -36,6 +36,26 @@
         </field>
     </record>
 
+
+    <record id="check_rel_note_sign" model="ir.actions.server">
+        <field name="name">Cocher Signature Relevé de Notes</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.check_rel_note_sign()
+        </field>
+    </record>
+
+    <record id="uncheck_rel_note_sign" model="ir.actions.server">
+        <field name="name">Décocher Signature Relevé de Notes</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.uncheck_rel_note_sign()
+        </field>
+    </record>
+
+
     <record id="check_show_in_website" model="ir.actions.server">
         <field name="name">Cocher l'affichage dans Site Web</field>
         <field name="model_id" ref="edu_management.model_note_list_filter"/>

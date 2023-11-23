@@ -100,6 +100,13 @@ class InscriptionEdu(models.Model):
     le_sign = fields.Boolean("Signature Lettre d'engagement")
     # Certificat de scolarité Signature
     cs_sign = fields.Boolean("Signature Certificat de scolarité")
+    rel_note_sign = fields.Boolean("Signature relevé de note")
+
+    note_list_ids = fields.Many2many(comodel_name="note.list", compute="compute_note_list_ids", string="Notes")
+
+    def compute_note_list_ids(self):
+        for rec in self:
+            rec.note_list_ids = rec.student_id.note_list_ids.filtered(lambda x: x.years_id == rec.school_year)
 
     def send_mail_file_required(self):
         domain = ['|','|','|','|','|','|','|',('degree_certified', '=', False), ('cv_lm', '=', False), 
@@ -144,6 +151,18 @@ class InscriptionEdu(models.Model):
         }
 
 
+    def show_rel_note_inscription_details(self):
+        insc_no_notes = self.sudo().search([]).filtered(lambda insc: insc.note_list_ids)
+        return {
+            "name": "Relevé de Notes",
+            "view_mode": "form,tree",
+            "res_model": "inscription.edu",
+            "type": "ir.actions.act_window",
+            'views': [(self.env.ref('amelioration_cnam.rel_note_tree').id, 'tree'), 
+                        (self.env.ref('amelioration_cnam.rel_note_form').id, 'form')],
+            "domain": [('id', 'in', insc_no_notes.ids)],
+        }
+
     @api.model
     def create(self, vals):
         res = super(InscriptionEdu, self).create(vals)
@@ -185,3 +204,11 @@ class InscriptionEdu(models.Model):
     def uncheck_cs_sign(self):
         for insc in self:
             insc.write({'cs_sign': False})
+
+    def check_rel_note_sign(self):
+        for insc in self:
+            insc.write({'rel_note_sign': True})
+
+    def uncheck_rel_note_sign(self):
+        for insc in self:
+            insc.write({'rel_note_sign': False})

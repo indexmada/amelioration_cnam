@@ -166,5 +166,91 @@
         <!-- Relevé de note: /views/result_template.xml : rel_note_report_inherit -->
 
 
+<!-- Relevé de note -->
+        <template id="new_rel_note_report">
+            <t t-call="web.html_container">
+                <t t-call="edu_management.internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="o" t-value="o.with_context(lang=lang)" />
+                        <t t-if="not company">
+                            <!-- Multicompany -->
+                            <t t-if="company_id">
+                                <t t-set="company" t-value="company_id"/>
+                            </t>
+                            <t t-elif="o and 'company_id' in o">
+                                <t t-set="company" t-value="o.company_id.sudo()"/>
+                            </t>
+                            <t t-else="else">
+                                <t t-set="company" t-value="res_company"/>
+                            </t>
+                        </t>
+                        <t t-set="notes" t-value="o.sudo().note_list_ids.filtered(lambda x: x.validation == 'validated' and x.mention != 'defaillant')"/>
+                            <div t-if="notes" class="page" style="font-family: 'arial';">
+                                <div class="col-4 offset-8 text-left">
+                                    <t t-esc="o.display_name"/><br/>
+
+                                        <t t-esc="o.formation_id.name"/><br/>
+                                        <t t-esc="o.adress or ''"/><br/>
+                                        <t t-esc="o.zip or ''"/> - <t t-esc="o.town or ''"/>
+                                </div>
+                                <br/>
+                                <h2 class="text-center"><strong>RELEVE DE NOTE <t t-esc="o.school_year.name"/></strong></h2>
+                                <br/>
+
+                                <table id="tab_result" class="table table-bordered">
+                                    <tr>
+                                        <td style="border: 1px solid black;">Unités</td>
+                                        <td style="border: 1px solid black;">Session 1</td>
+                                        <td style="border: 1px solid black;">Session 2</td>
+                                    </tr>
+                                    <tr>
+
+                                    <t t-foreach="notes" t-as="note">
+                                        <tr t-if="note.mention != 'defaillant' and note.note_2set != True">
+                                            <td style="border: 1px solid black;"><t t-esc="note.unit_enseigne.display_name"/></td>
+                                            <td style="border: 1px solid black;"><t t-esc="note.note_session1 or ''"/></td>
+                                            <td style="border: 1px solid black;"><t t-esc="note.note_session2 or ''"/></td>
+                                        </tr>
+                                    </t>
+
+                                    </tr>
+                                </table>
+                                    <br/>
+                                    <br/>                                
+
+                                <div>
+                                    Fait pour servir et valoir ce que de droit.
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="offset-8  text-center">Fait à Antananarivo, le
+                                        <span t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/>
+                                        <br/><br/>
+                                        Pour l'Administratrice Générale et par délégation
+                                        <div>
+                                          <img t-if="company.sign_director and o.rel_note_sign" t-att-src="image_data_uri(company.sign_director)" style="max-height: 130px;" alt="Logo"/>
+                                          <div t-else="min-height:130px;"/>
+                                        </div>
+                                    <br/>
+                                    Le Directeur du centre<br/>
+                                    Jocelyn RASOANAIVO
+                                     </div>
+                                </div>
+                            </div>
+                            <p style="page-break-after:always"/>
+                    </t>  
+                </t>          
+            </t>
+        </template>
+
+        <report
+                id="insc_releve_note_report"
+                model="inscription.edu"
+                string="RELEVE DE NOTES"
+                report_type="qweb-pdf"
+                name="amelioration_cnam.new_rel_note_report"
+                file="amelioration_cnam.new_rel_note_report"
+            />
+
         </data>
     </odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rel_note_action" model="ir.actions.server">
+        <field name="name">ReleveNoteServerAction</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.show_rel_note_inscription_details()
+        </field>
+    </record>
+
+    <menuitem id="menu_rel_note_new"
+              name="Relevé de Notes"
+              action="rel_note_action"
+              parent="edu_management.menu_exam"/>
+
+    <record id="rel_note_tree" model="ir.ui.view">
+    	<field name="name">RelNoteTree</field>
+    	<field name="model">inscription.edu</field>
+    	<field name="arch" type="xml">
+    		<tree>
+    			<field name="student_id"/>
+    			<field name="school_year"/>
+    			<field name="faculty_id"/>
+    			<field name="formation_id"/>
+    			<field name="rel_note_sign"/>
+    		</tree>
+    	</field>
+    </record>
+
+    <record id="rel_note_form" model="ir.ui.view">
+    	<field name="name">RelNoteForm</field>
+    	<field name="model">inscription.edu</field>
+    	<field name="arch" type="xml">
+    		<form>
+    			<sheet>
+    				<group>
+    					<field name="name" readonly="1"/>
+    					<field name="student_id" readonly="1"/>
+		    			<field name="school_year" readonly="1"/>
+		    			<field name="faculty_id" readonly="1"/>
+		    			<field name="formation_id" readonly="1"/>
+		    			<field name="rel_note_sign"/>
+    				</group>
+    				<notebook>
+    					<page name="notes" string="Notes">
+    						<field name="note_list_ids">
+	    						<tree editable="top">
+	    							<field name="unit_enseigne"/>
+	    							<field name="session_stored"/>
+	    							<field name="note_sem1"/>
+	    							<field name="note_sem2"/>
+	    							<field name="mention"/>
+	    							<field name="validation"/>
+	    						</tree>
+	    					</field>
+    					</page>
+    				</notebook>
+    			</sheet>
+    		</form>
+    	</field>
+    </record>
+
+</odoo>
