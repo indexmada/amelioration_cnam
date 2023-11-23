@@ -31,7 +31,7 @@ class AmeliorationCnam(http.Controller):
             'year': year_id,
             'ue_search_val': ue_search_val,
             }
-        return request.render('amelioration_cnam.result_template', )
+        return request.render('amelioration_cnam.result_template', vals)
 
     @http.route('/show_result_content/<int:year>/<session>/<int:ue_id>', auth='public')
     def show_result_content(self, year, session, ue_id):
