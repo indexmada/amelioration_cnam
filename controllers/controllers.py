@@ -169,7 +169,6 @@ class AmeliorationCnam(http.Controller):
 
 
             logo_image = io.BytesIO(base64.b64decode(request.env.company.logo))
-            worksheet_ost.insert_image('H1', "image.png", {'image_data': logo_image,'x_scale': 0.60,'y_scale':0.60})
             worksheet_ost.write("A2", ue.display_name, center_bold_12)
             worksheet_ost.write("A3", "Tuteur: ", left_bold_12)
 
@@ -204,7 +203,8 @@ class AmeliorationCnam(http.Controller):
                 worksheet_ost.write(cell, len(l.student_pointed_ids), cell_center_12)
 
                 i+=1
-
+            i = round((i/2)-0.02)
+            worksheet_ost.insert_image(row_tab[i]+'1', "image.png", {'image_data': logo_image,'x_scale': 0.60,'y_scale':0.60})
 
 
     def style(self, worksheet):
