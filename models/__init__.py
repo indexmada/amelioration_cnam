@@ -8,3 +8,5 @@ from . import note_list
 from . import convocation
 from . import payment_inscription
 from . import exam
+from . import config_settings
+from . import training_edu

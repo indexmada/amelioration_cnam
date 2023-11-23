@@ -39,5 +39,8 @@
         "views/result_template.xml",
         "views/report.xml",
         "data/server_actions.xml",
+        "views/config_settings.xml",
+        "views/portal_template.xml",
+        "views/training_edu.xml",
     ],
 }

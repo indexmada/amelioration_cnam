@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <template id="portal_my_inscription_inherit" name="Portal My inscription Inherit" inherit_id="edu_management.portal_my_inscription">
+            <xpath expr="//td[last()]" position="replace">
+                <td>
+                    <t t-if="inscription.school_year in env.company.school_year_ids and datetime.date.today() &lt; env.company.date_last">
+                        <a class="btn btn-primary btn-block o_download_btn"
+                            t-att-href="inscription.get_portal_url(report_type='pdf', download=True)"
+                            title="Télécharger">
+                            <i class="fa fa-download"/>
+                            Télécharger Certificat
+                        </a>
+                    </t>
+                </td>
+            </xpath>
+        </template>
+        <template id="portal_cnam_documents_inherit" name="Portal Cnam Documents Inherit" inherit_id="index_custom_cnam.portal_cnam_documents">
+            <xpath expr="//t[@t-if='note_ids']/tbody" position="replace">
+                <tbody>
+                    <t t-foreach="note_ids" t-as="note">
+                        <tr t-if="'MADAGASCAR' in note.note_list_filter_id.centre_ids.mapped('name')">
+                            <td>
+                                <span t-esc="note.note_list_filter_id.year.name"/>
+                            </td>
+                            <td>
+                              Attestation de réussite
+                            </td>
+                            <td>
+                                <a t-att-href="'/report/pdf/index_custom_cnam.att_re_report/%s' % note.id">
+                                    <button type="button" class="btn btn-primary btn-md o_website_form_send">Télécharger</button>
+                                </a>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </xpath>
+            <xpath expr="//t[@t-if='note_ids']" position="after">
+                <t t-set="formation_attach" t-value="env['training.edu'].sudo().get_all_training_attach()"/>
+                <t t-if="formation_attach" t-call="portal.portal_table">
+                    <t t-foreach="formation_attach" t-as="formation">
+                        <br/><br/>
+                        <div><strong t-esc="formation.name"></strong></div>
+                        <thead>
+                            <tr class="active">
+                                <th>Date</th>
+                                <th>Documents</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="formation.attachment_ids" t-as="att">
+                                <tr>
+                                    <td>
+                                        <span t-esc="att.create_date"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="att.name"/>
+                                    </td>
+                                    <td>
+                                        <a t-att-href="'/web/content/'+str(att.id)+'?download=true'">
+                                            <button type="button" class="btn btn-primary btn-md o_website_form_send">Télécharger</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </t>
+                  </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

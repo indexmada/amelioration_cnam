@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="training_edu_form_inherit" model="ir.ui.view">
+		<field name="name">TrainingEduFormInherit</field>
+		<field name="model">training.edu</field>
+		<field name="inherit_id" ref="edu_management.training_edu_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//page" position="after">
+				<page name="file_attachment" string="Documents">
+					<group>
+						<field name="attachment_ids" widget="many2many_binary"/>
+					</group>
+				</page>
+			</xpath>
+		</field>
+	</record>
+</odoo>
