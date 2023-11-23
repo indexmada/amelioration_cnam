@@ -22,10 +22,16 @@ class AmeliorationCnam(http.Controller):
 
         return "INSC STATE UPDATED"
 
-    @http.route('/load_ue_section_by_year/<int:year>', auth='public')
-    def load_ue_section_by_year(self, year):
+    @http.route('/load_ue_section_by_year/<int:year>/<ue_search_val>', auth='public')
+    def load_ue_section_by_year(self, year, ue_search_val):
+        if ue_search_val == '0' or ue_search_val == 0:
+            ue_search_val = False
         year_id = request.env['school.year'].sudo().browse(year)
-        return request.render('amelioration_cnam.result_template', {'year': year_id})
+        vals = {
+            'year': year_id,
+            'ue_search_val': ue_search_val,
+            }
+        return request.render('amelioration_cnam.result_template', )
 
     @http.route('/show_result_content/<int:year>/<session>/<int:ue_id>', auth='public')
     def show_result_content(self, year, session, ue_id):

@@ -81,8 +81,11 @@ class NoteListFilter(models.Model):
 
 	show_in_website = fields.Boolean("Afficher dans site web")
 
-	def get_ue_ids(self, year, session = 1):
-		result = self.sudo().search([('year', '=', year), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0).mapped('unit_enseigne')
+	def get_ue_ids(self, year, session = 1, ue_search_val=False):
+		result = self.sudo().search([('year', '=', year), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0 and "MADAGASCAR" in x.centre_ids.mapped('name')).mapped('unit_enseigne')
+		if ue_search_val:
+			result = result.filtered(lambda y: ue_search_val.lower() in y.code.lower())
+
 		return result
 
 	def check_show_in_website(self):

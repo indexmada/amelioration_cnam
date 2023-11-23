@@ -3,8 +3,18 @@
 	<data>
 		<template id="result_template" name="Resultats d'exament">
                 <h3>Session 1</h3>
+
+                  <!--Search panel -->
+                  <div class="input-group rounded p_search_pan">
+                    <input type="search" class="form-control rounded" placeholder="Code UE" id="input_search" aria-label="Search" aria-describedby="search-addon" t-att-value="ue_search_val or ''"/>
+                    <span class="input-group-text border-0" id="search-addon" t-att-onclick="'search_ue_value('+str(year.id)+')'">
+                      <i class="fa fa-search"></i>
+                    </span>
+                  </div>
+                  <!--End Search Panel-->
+
                 <div class="resultats-examens--liste-ue">
-                  <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 1)"/>
+                  <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 1, ue_search_val = ue_search_val)"/>
                   <t t-foreach="ue_ids" t-as="ue">
                     <a class="showResultsExams" t-att-data-ue="ue.code" t-att-onclick="'show_result('+str(year.id)+',1,'+str(ue.id)+')'" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
                   </t>
@@ -15,7 +25,7 @@
                   </div>
                   <h3>Session 2</h3>
                   <div class="resultats-examens--liste-ue">
-                    <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 2)"/>
+                    <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 2, ue_search_val = ue_search_val)"/>
                     <t t-foreach="ue_ids" t-as="ue">
                       <a class="showResultsExams" t-att-data-ue="ue.code" t-att-onclick="'show_result('+str(year.id)+',2,'+str(ue.id)+')'" t-att-data-annee="year.name">- <t t-esc="ue.code"/> -</a>
                     </t>
