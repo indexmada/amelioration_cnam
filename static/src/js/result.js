@@ -4,7 +4,7 @@ function year_clicked(year_id) {
 
 function show_result(year_id, session, ue_id) {
     $("#result").css("display", "flex");
-    $("#result_content").load('/show_result_content/'+year_id+'/'+session+'/'+ue_id);
+    $("#result_content").load('/show_result_content/'+year_id+'/'+session+'/'+ue_id+'/0');
 }
 
 function hide_content() {
@@ -13,7 +13,12 @@ function hide_content() {
 }
 
 function search_ue_value(year_id) {
-    console.log('_______');
     ue_val = $("#input_search").val();
     $("#ue_section").load('/load_ue_section_by_year/'+year_id+'/'+ue_val);
+}
+
+function search_audit_value(year_id, session, ue_id) {
+    num_audit_val = $("#input_search_num_audit").val();
+    $("#result").css("display", "flex");
+    $("#result_content").load('/show_result_content/'+year_id+'/'+session+'/'+ue_id+'/'+num_audit_val);
 }

@@ -2,17 +2,17 @@
 <odoo>
 	<data>
 		<template id="result_template" name="Resultats d'exament">
-                <h3>Session 1</h3>
 
                   <!--Search panel -->
                   <div class="input-group rounded p_search_pan">
-                    <input type="search" class="form-control rounded" placeholder="Code UE" id="input_search" aria-label="Search" aria-describedby="search-addon" t-att-value="ue_search_val or ''"/>
+                    <input type="search" class="form-control rounded" placeholder="Code ue / Nom ue" id="input_search" aria-label="Search" aria-describedby="search-addon" t-att-value="ue_search_val or ''"/>
                     <span class="input-group-text border-0" id="search-addon" t-att-onclick="'search_ue_value('+str(year.id)+')'">
                       <i class="fa fa-search"></i>
                     </span>
                   </div>
                   <!--End Search Panel-->
 
+                <h3>Session 1</h3>
                 <div class="resultats-examens--liste-ue">
                   <t t-set="ue_ids" t-value="env['note.list.filter'].sudo().get_ue_ids(year = year.id, session = 1, ue_search_val = ue_search_val)"/>
                   <t t-foreach="ue_ids" t-as="ue">
@@ -36,6 +36,16 @@
 			<div>
 				<h3 t-esc="ue_name"/>
 				<div>
+
+					<!--Search panel -->
+                  <div class="input-group rounded">
+                    <input type="search" class="form-control rounded" placeholder="Num audit" id="input_search_num_audit" aria-label="Search" aria-describedby="search-addon" t-att-value="num_audit or ''"/>
+                    <span class="input-group-text border-0" id="search-addon" t-att-onclick="'search_audit_value('+str(year)+', '+str(session) +', '+ str(ue.id) +')'">
+                      <i class="fa fa-search"></i>
+                    </span>
+                  </div>
+          <!--End Search Panel-->
+
 					<table class="table--resultats-examens">
 						<tbody>
 							<tr>
