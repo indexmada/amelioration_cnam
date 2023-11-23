@@ -38,7 +38,7 @@ class AmeliorationCnam(http.Controller):
         if num_audit == '0' or num_audit == 0:
             num_audit = False
         ue = request.env['unit.enseigne.config'].sudo().browse(ue_id)
-        ue_name = ue..display_name
+        ue_name = ue.display_name
         note_list_filter_ids = request.env['note.list.filter'].sudo().search([('year', '=', year), ('unit_enseigne', '=', ue_id), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0)
         result_ids = note_list_filter_ids.mapped('note_list_ids')
         if num_audit:
