@@ -108,3 +108,15 @@
     width: 50%;
     margin-bottom: 20px;
 }
+
+.p_search_pan span {
+    cursor: pointer;
+}
+
+.p_search_new {
+    margin-bottom: 3px;
+}
+
+.p_search_new span {
+    cursor: pointer;
+}

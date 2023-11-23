@@ -38,7 +38,7 @@
 				<div>
 
 					<!--Search panel -->
-                  <div class="input-group rounded">
+                  <div class="input-group rounded p_search_new">
                     <input type="search" class="form-control rounded" placeholder="Num audit" id="input_search_num_audit" aria-label="Search" aria-describedby="search-addon" t-att-value="num_audit or ''"/>
                     <span class="input-group-text border-0" id="search-addon" t-att-onclick="'search_audit_value('+str(year)+', '+str(session) +', '+ str(ue.id) +')'">
                       <i class="fa fa-search"></i>

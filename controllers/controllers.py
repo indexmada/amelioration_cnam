@@ -42,7 +42,7 @@ class AmeliorationCnam(http.Controller):
         note_list_filter_ids = request.env['note.list.filter'].sudo().search([('year', '=', year), ('unit_enseigne', '=', ue_id), ('show_in_website', '=', True)]).filtered(lambda x: x.session.name.find(str(session)) >= 0)
         result_ids = note_list_filter_ids.mapped('note_list_ids')
         if num_audit:
-            result_ids = result_ids.filtered(lambda res: num_audit.lower in res.audit.lower())
+            result_ids = result_ids.filtered(lambda res: num_audit.lower() in res.audit.lower())
         vals = {
             'note_list_ids': result_ids, 
             'ue_name': ue_name, 
