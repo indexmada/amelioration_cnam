@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="xls_insc_recap_form" model="ir.ui.view">
+        <field name="name">Recap. Inscription</field>
+        <field name="model">insc.recap</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="date" string="Date">
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <group name="school_years" string="Années Universitaire">
+                    <field name="school_year_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="generate_report" type="object" string="Exporter" class="btn-primary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <act_window id="xls_insc_recap_action" name="Recap. Inscription" res_model="insc.recap" view_mode="form"
+                target="new"/>
+
+    <menuitem id="xls_insc_recap_menu"
+              name="Recap. Inscription "
+              parent="index_custom_cnam.analysis_menu"
+              sequence="2"
+              action="xls_insc_recap_action"/>
+
+</odoo>

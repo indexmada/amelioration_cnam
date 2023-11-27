@@ -11,3 +11,4 @@ from . import exam
 from . import config_settings
 from . import training_edu
 from . import res_partner
+from . import insc_recap

@@ -43,5 +43,6 @@
         "views/portal_template.xml",
         "views/training_edu.xml",
         "views/certificat_scolarite.xml",
+        "views/insc_recap.xml"
     ],
 }
