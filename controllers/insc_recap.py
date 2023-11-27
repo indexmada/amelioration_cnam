@@ -20,14 +20,15 @@ class RecapEngagement(http.Controller):
 
         if str_school_year_ids not in ['0', 0]:
             school_year_tab = str_school_year_ids.split("-")
+            school_year_tab.pop()
             res = [eval(i) for i in school_year_tab]
             school_year_ids = request.env["school.year"].sudo().search([('id', 'in', res)])
 
         else:
             school_year_ids = request.env["school.year"].sudo().search([])
 
-        date_from = datetime.strptime(str_date_from, "%d-%m-%Y").date if str_date_from else False
-        date_to = datetime.strptime(str_date_to, "%d-%m-%Y").date if str_date_to else False
+        date_from = datetime.strptime(str_date_from, "%d-%m-%Y").date() if str_date_from else False
+        date_to = datetime.strptime(str_date_to, "%d-%m-%Y").date() if str_date_to else False
 
 
         self.report_excel_insc_recap(workbook, school_year_ids, date_from, date_to)
