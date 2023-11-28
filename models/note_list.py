@@ -98,7 +98,7 @@ class NoteListFilter(models.Model):
 
 
 	def export_pv_note_excel(self):
-		id_tab = False
+		id_tab = ''
 		for i in self:
 			id_tab += str(i.id) + "-"
 		if not id_tab:
