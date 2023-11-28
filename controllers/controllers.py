@@ -167,10 +167,14 @@ class AmeliorationCnam(http.Controller):
             line_filtered = request.env['regrouping.center.line'].sudo().search([('id', 'in', regrouping_line_ids.ids), ('ue_config_id', '=', ue.id)], order="grouping_date ASC")
             all_students = line_filtered.mapped('assigned_student')
 
+            all_prof = line_filtered.mapped('tutor_attendance')
+            prof_names = ''
+            for prof in all_prof:
+                prof_names+= prof.name +', '
 
             logo_image = io.BytesIO(base64.b64decode(request.env.company.logo))
             worksheet_ost.write("A2", ue.display_name, center_bold_12)
-            worksheet_ost.write("A3", "Tuteur: ", left_bold_12)
+            worksheet_ost.write("A3", "Tuteur: "+prof_names, left_bold_12)
 
             worksheet_ost.write("A5", "Nom et Prénoms", cell_bold_center_12)
 
