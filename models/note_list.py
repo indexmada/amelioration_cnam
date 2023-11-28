@@ -67,14 +67,14 @@ class NoteList(models.Model):
 	def open_results_data(self):
 		self.search([]).compute_note_2set()
 		return {
-                'type': 'ir.actions.act_window',
-                'name':'Résultats',
-                'res_model': 'note.list',
-                'view_mode': 'tree',
-                'view_id': self.env.ref('amelioration_cnam.view_note_list_tree_session').id,
-                'domain': [('note_2set', '=', False)],
-                'target': 'current',
-            }
+				'type': 'ir.actions.act_window',
+				'name':'Résultats',
+				'res_model': 'note.list',
+				'view_mode': 'tree',
+				'view_id': self.env.ref('amelioration_cnam.view_note_list_tree_session').id,
+				'domain': [('note_2set', '=', False)],
+				'target': 'current',
+			}
 
 class NoteListFilter(models.Model):
 	_inherit = "note.list.filter"
@@ -95,3 +95,16 @@ class NoteListFilter(models.Model):
 	def uncheck_show_in_website(self):
 		for note_list in self:
 			note_list.write({"show_in_website": False})
+
+
+	def export_pv_note_excel(self):
+		id_tab = False
+		for i in self:
+			id_tab += str(i.id) + "-"
+		if not id_tab:
+			id_tab=""
+		return {
+			'type': 'ir.actions.act_url',
+			'target': 'current',
+			'url': '/web/binary/export_pv_note_excel?id_tab='+id_tab        
+		}  

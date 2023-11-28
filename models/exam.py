@@ -11,7 +11,7 @@ class ExamCalandar(models.Model):
 	@api.model 
 	def create(self, vals):
 		if vals.get('start_date'):
-			result1 = self.env['exam.calandar'].sudo().search([('start_date', '<=', vals['start_date'])]).filtered(lambda x: x.end_date >= datetime.strptime(vals.get('start_date'), '%Y-%m-%d').date())
+			result1 = self.env['exam.calandar'].sudo().search([('start_date', '<=', vals['start_date'])]).filtered(lambda x: x.end_date and x.end_date >= datetime.strptime(vals.get('start_date'), '%Y-%m-%d').date())
 			if result1:
 				message = "Un examen existant à la date du "+vals.get('start_date')
 				raise UserError(_(message))

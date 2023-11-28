@@ -74,4 +74,13 @@
         </field>
     </record>
 
+    <record id="export_pv_note" model="ir.actions.server">
+        <field name="name">Export PV Notes (Excel)</field>
+        <field name="model_id" ref="edu_management.model_note_list_filter"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.export_pv_note_excel()
+        </field>
+    </record>
+
 </odoo>
