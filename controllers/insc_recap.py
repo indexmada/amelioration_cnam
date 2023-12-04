@@ -151,7 +151,7 @@ class RecapEngagement(http.Controller):
                     i += 1
 
                 insc_res_ids = insc_ids.filtered(lambda x: x.inscription_date == insc_date)
-                max_length = max(len(x.units_enseignes + x.other_ue_ids) for x in insc_res_ids)
+                max_length = max(len(x.units_enseignes + x.other_ue_ids) for x in insc_ids)
 
                 # Fill UE header
                 j = 0
@@ -217,6 +217,7 @@ class RecapEngagement(http.Controller):
 
                     # Lister Details UE
                     i += 1
+                    t = 0
                     for ue in (insc.units_enseignes + insc.other_ue_ids):
                         worksheet_ost.write(row_tab[i]+str(line), ue.name.code, cell_left_10)
                         if ue.currency_id.name == "MGA":
@@ -228,6 +229,14 @@ class RecapEngagement(http.Controller):
                             worksheet_ost.write(row_tab[i+2]+str(line), '{:,}' .format(round(ue.cost_devise, 2)), cell_right_10)
                             total_currency += ue.cost_devise
                         i += 3
+                        t += 1
+
+                    if t < max_length:
+                        for r in range(t, max_length):
+                            worksheet_ost.write(row_tab[i]+str(line), '', cell_left_10)
+                            worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
+                            worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                            i += 3
 
                     # DIB
                     if insc.dib:
