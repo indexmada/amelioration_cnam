@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_cnam_landscape" model="report.paperformat">
+            <field name="name">CNAM Landscape</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="True"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <template id="payment_report_layout">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header" style="margin-top: 20px;">
+                <div class="row">
+                    <div class="col-3 text-center" style="font-size: 10px;">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 50px;"
+                             alt="Logo"/>
+
+                        <br/>67Ha Maison des Produits 6ème étage<br/>
+                        Tél: 020 22 290 19 ou +26133 14 259 35 ou +26132 53 015 13<br/>
+                        NIF: 3000116569<br/>
+                        cnam.madagascar@yahoo.com<br/>
+                        www.cnam-madagascar.mg
+                    </div>
+                    <div class="col-5 offset-1 text-center" style="padding: 10px 20px; font-size: 30px">
+                        CONSERVATOIRE NATIONAL <br/>DES ARTS ET METIERS
+                    </div>
+                    <div class="col-2 offset-1">
+                        <br/><br/>
+                        N° ...............
+                    </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+        </template>
+
+        <template id="report_payment_receipt_document" name="CNAM Reçu de paiement">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                    <t t-call="amelioration_cnam.payment_report_layout">
+                        <div style="font-size: 15px;">
+                            <br/><br/><br/><br/><br/>
+                            <t t-set="insc_id" t-value="o.partner_id.get_insc_info()"/>
+                            <t t-set="invoice_ids" t-value="o.reconciled_invoice_ids"/>
+                            <t t-set="ue_ids" t-value="o.get_ue_list(o.invoice_ids)"/>
+                            <div> Reçu de M: <strong t-field="o.partner_id"/> </div>
+                            <div> N° Auditeur: <strong t-esc="insc_id.name"/> </div>
+                            <div> Filière: <strong t-esc="insc_id.faculty_id.name"/> </div>
+                            <div> En règlement de: <strong t-esc="insc_id.faculty_id.name"/> </div>
+                            <div style="padding-left: 30px;">
+                                <table style="border: 0px; width: 95%;">
+                                    <tr>
+                                        <td style="width:20%;">
+                                            <i class="fa fa-square-o"/> Droit individuel de base (DIB):<br/>
+                                            <i class="fa fa-check-square"/> Unités d'enseignement (UE): 
+                                        </td>
+                                        <td style="width:;">
+                                            <br/>
+                                            ................................................<br/>
+                                            .......................(<span t-esc="len(ue_ids)"/>)......................
+                                        </td>
+                                        <td style="width:17%;">
+                                            <br/>
+                                            <t t-foreach="range(0,7)" t-as="i">
+                                                <t t-if="len(ue_ids)>i">
+                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.name"/><br/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="i+1"/>-..............................<br/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td style="width:17%;">
+                                            <br/>
+                                            <t t-foreach="range(7,14)" t-as="i">
+                                                <t t-if="len(ue_ids)>i">
+                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.name"/><br/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="i+1"/>-..............................<br/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td style="width: 30px;">
+                                        </td>
+                                        <td style="width:22%;">
+                                            <t t-foreach="range(0,9)" t-as="i">
+                                                -......................................................<br/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <i class="fa fa-square-o"/> AUTRES :.......................................................................................................................................................................................................................................................................................................................
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 25px; line-height: 25px;">
+                                        <td>
+                                            Montant Total
+                                        </td>
+                                        <td colspan="4"/>
+                                        <td>
+                                            <div style="background-color: #696969; width: 80%; height: 100%; text-align: right; padding: 5px;">
+                                                <strong t-esc="o.amount"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            Arrêté le present reçu à la somme de
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 25px; line-height: 25px;">
+                                        <td colspan="6">
+                                            <div style="background-color: #696969; text-align: center; padding: 5px; font-size: 17px; font-weight: bold; width: 96%; float: left" 
+                                                t-esc="o.currency_id.amount_to_text(o.amount).upper()"
+                                            /> 
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                <table style="border: 0px; width: 100%;">
+                                    <tr>
+                                        <td>
+                                            Paiment:
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-square-o"/> Chèque.................................<br/>
+                                            <i class="fa fa-square-o"/> Espèce <br/>
+                                        </td>
+                                        <td>
+                                            N°.............................................................................................................   Antananarivo le <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/><br/>
+                                            <i class="fa fa-square-o"/> Autre à préciser: ................................................
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/><br/><br/>
+                                <table style="border: 0px; width: 100%; text-align: center;">
+                                    <tr>
+                                        <td>
+                                            Le caissier
+                                        </td>
+                                        <td>
+                                            L'intérresé(e)
+                                        </td>
+                                        <td>
+                                            Le responsable pédagogique
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <report id="cnam_payment_acc" 
+                model="account.payment" 
+                string="Reçu de paiement Cnam"
+                report_type="qweb-pdf"
+                name="amelioration_cnam.report_payment_receipt_document"
+                file="amelioration_cnam.report_payment_receipt_document"
+                paperformat="amelioration_cnam.paperformat_cnam_landscape"
+            />
+    </data>
+</odoo>

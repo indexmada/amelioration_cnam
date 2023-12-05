@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'index_custom_cnam', 'edu_management'],
+    'depends': ['base', 'index_custom_cnam', 'edu_management', 'account'],
 
     # always loaded
     'data': [
@@ -43,6 +43,7 @@
         "views/portal_template.xml",
         "views/training_edu.xml",
         "views/certificat_scolarite.xml",
-        "views/insc_recap.xml"
+        "views/insc_recap.xml",
+        "views/payment_report.xml",
     ],
 }

@@ -94,3 +94,10 @@ class PaymentInscription(models.Model):
 	# 		vals['num_engagement'] = num_engagement
 	# 	res = super(PaymentInscription, self).write(vals)
 	# 	return res
+
+class AccountPaymen(models.Model):
+	_inherit = "account.payment"
+
+	def get_ue_list(self, invoice_ids):
+		unit_enseigne_ids = self.env['unit.enseigne'].sudo().search([('invoice_id', 'in', invoice_ids.ids)])
+		return unit_enseigne_ids
