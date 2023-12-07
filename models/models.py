@@ -104,6 +104,18 @@ class InscriptionEdu(models.Model):
 
     note_list_ids = fields.Many2many(comodel_name="note.list", compute="compute_note_list_ids", string="Notes")
 
+    ue_not_used = fields.Many2many(comodel_name="unit.enseigne.config", string="UE NOT USER", compute="compute_ue_not_used", store=True)
+
+    @api.depends('units_enseignes', 'other_ue_ids', 'formation_id', 'formation_id.units_enseignement_ids')
+    def compute_ue_not_used(self):
+        for rec in self:
+            ue_ids = rec.units_enseignes + rec.other_ue_ids
+            ue_config_ids = ue_ids.mapped('name')
+            ue_formation_ids = rec.formation_id.units_enseignement_ids
+
+            results = ue_formation_ids.filtered(lambda x: x not in ue_config_ids)
+            rec.ue_not_used = results
+
     def compute_note_list_ids(self):
         for rec in self:
             rec.note_list_ids = rec.student_id.note_list_ids.filtered(lambda x: x.years_id == rec.school_year)

@@ -102,6 +102,48 @@ class RecapEngagement(http.Controller):
             'left_color': 'black',
             "font_size": 10,
             })
+        cell_left_14 = workbook.add_format({
+            'align': 'left',
+            'valign': 'vcenter',
+            'top': 1,
+            'left': 1,
+            'right': 1,
+            'bottom': 1,
+            'right_color': 'black',
+            'bottom_color': 'black',
+            'top_color': 'black',
+            'left_color': 'black',
+            "font_size": 14,
+            })
+        cell_right_10_yellow = workbook.add_format({
+            'align': 'right',
+            'valign': 'vcenter',
+            'top': 1,
+            'left': 1,
+            'right': 1,
+            'bottom': 1,
+            'right_color': 'black',
+            'bottom_color': 'black',
+            'top_color': 'black',
+            'left_color': 'black',
+            "font_size": 10,
+            "bg_color": "yellow",
+            })
+        cell_left_10_bold_yellow = workbook.add_format({
+            'align': 'left',
+            'valign': 'vcenter',
+            'top': 1,
+            'left': 1,
+            'right': 1,
+            'bottom': 1,
+            'right_color': 'black',
+            'bottom_color': 'black',
+            'top_color': 'black',
+            'left_color': 'black',
+            "font_size": 10,
+            "bold": True,
+            "bg_color": "yellow",
+            })
 
         cell_right_10 = workbook.add_format({
             'align': 'right',
@@ -151,7 +193,7 @@ class RecapEngagement(http.Controller):
                     i += 1
 
                 insc_res_ids = insc_ids.filtered(lambda x: x.inscription_date == insc_date)
-                max_length = max(len(x.units_enseignes + x.other_ue_ids) for x in insc_ids)
+                max_length = max(len(x.units_enseignes + x.other_ue_ids) + len(x.ue_not_used) for x in insc_ids)
 
                 # Fill UE header
                 j = 0
@@ -231,6 +273,13 @@ class RecapEngagement(http.Controller):
                         i += 3
                         t += 1
 
+                    for ue in insc.ue_not_used:
+                        worksheet_ost.write(row_tab[i]+str(line), ue.code, cell_left_10)
+                        worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
+                        worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                        i += 3
+                        t += 1
+
                     if t < max_length:
                         for r in range(t, max_length):
                             worksheet_ost.write(row_tab[i]+str(line), '', cell_left_10)
@@ -287,6 +336,68 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(row_tab[i-3]+str(line), datetime.strftime(insc_date, "%d/%m/%Y"), right_10)
                 worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(x_total_mga, 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(x_total_currency, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+
+
+                # Années à comparer
+                year_tab = year.name.split('-')
+                # Année 1
+                year_name1 = str(int(year_tab[0])-1)+'-'+str(int(year_tab[1])-1)
+                year_1 = request.env['school.year'].sudo().search([('name', '=', year_name1)], limit=1)
+                line += 1
+                worksheet_ost.write(row_tab[i-1]+str(line), year_name1, cell_left_10_bold_yellow)
+                d1 = insc_date
+                d2 = date(insc_date.year-1, insc_date.month, insc_date.day)
+                d3 = date(insc_date.year-2, insc_date.month, insc_date.day)
+                plage_date = [d1, d2, d3]
+                total_mga1 = 0
+                total_devise1 = 0
+                if year_1:
+                    insc1_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_1.id)])
+                    ue1_ids = insc1_ids.mapped('units_enseignes') + insc1_ids.mapped('other_ue_ids')
+                    total_mga1 = sum(x.cost_ariary for x in ue1_ids.filtered(lambda u: u.currency_id.name=='MGA'))
+                    total_devise1 = sum(x.cost_devise for x in ue1_ids.filtered(lambda u: u.currency_id.name!='MGA'))
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga1, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise1, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+                else:
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+
+                # ECART1
+                line += 1
+                worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
+                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga1 - x_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise1 - x_total_currency), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+
+                # Année 2
+                year_name2 = str(int(year_tab[0])-2)+'-'+str(int(year_tab[1])-2)
+                year_2 = request.env['school.year'].sudo().search([('name', '=', year_name2)])
+
+                line += 1
+                worksheet_ost.write(row_tab[i-1]+str(line), year_name2, cell_left_10_bold_yellow)
+                total_mga2 = 0
+                total_devise2 = 0
+                if year_1:
+                    insc2_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_2.id)])
+                    ue2_ids = insc2_ids.mapped('units_enseignes') + insc2_ids.mapped('other_ue_ids')
+                    total_mga2 = sum(x.cost_ariary for x in ue2_ids.filtered(lambda u: u.currency_id.name=='MGA'))
+                    total_devise2 = sum(x.cost_devise for x in ue2_ids.filtered(lambda u: u.currency_id.name!='MGA'))
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga2, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise2, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+                else:
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+
+                # ECART2
+                line += 1
+                worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
+                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga2 - x_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise2 - x_total_currency), 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
                 
                 line += 2
