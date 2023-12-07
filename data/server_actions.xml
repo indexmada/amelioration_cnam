@@ -83,4 +83,39 @@
         </field>
     </record>
 
+    <record id="check_attest_sign" model="ir.actions.server">
+        <field name="name">Cocher Signature Attestation</field>
+        <field name="model_id" ref="edu_management.model_note_list"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.check_attest_sign()
+        </field>
+    </record>
+
+    <record id="uncheck_attest_sign" model="ir.actions.server">
+        <field name="name">Décocher Signature Attestation</field>
+        <field name="model_id" ref="edu_management.model_note_list"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.uncheck_attest_sign()
+        </field>
+    </record>
+
+    <record id="check_rel_sign" model="ir.actions.server">
+        <field name="name">Cocher Signature Rélevé</field>
+        <field name="model_id" ref="edu_management.model_note_list"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.check_rel_sign()
+        </field>
+    </record>
+
+    <record id="uncheck_rel_sign" model="ir.actions.server">
+        <field name="name">Décocher Signature Rélevé</field>
+        <field name="model_id" ref="edu_management.model_note_list"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.uncheck_rel_sign()
+        </field>
+    </record>
 </odoo>

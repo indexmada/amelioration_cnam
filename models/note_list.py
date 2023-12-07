@@ -76,6 +76,22 @@ class NoteList(models.Model):
 				'target': 'current',
 			}
 
+	def check_attest_sign(self):
+		for note_list in self:
+			note_list.write({"attest_sign": True})
+
+	def uncheck_attest_sign(self):
+		for note_list in self:
+			note_list.write({"attest_sign": False})
+
+	def check_rel_sign(self):
+		for note_list in self:
+			note_list.write({"rel_sign": True})
+
+	def uncheck_rel_sign(self):
+		for note_list in self:
+			note_list.write({"rel_sign": False})
+
 class NoteListFilter(models.Model):
 	_inherit = "note.list.filter"
 
