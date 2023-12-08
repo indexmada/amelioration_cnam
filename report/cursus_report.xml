@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="historique_cursus_pdf" name="Historique Cursus">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-12 text-center" style="padding: 20px;">
+                            <h1>
+                                Historique Cursus: <t t-esc="o.display_name"/>
+                            </h1>
+                            <div>
+                                <t t-set="insc_ids" t-value="o.get_insc_ids()"/>
+                                <t t-foreach="insc_ids" t-as="insc">
+                                    <h3> Année Universitaire: <t t-esc="insc.school_year.name"/></h3>
+                                    <div>
+                                        <div>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th>
+                                                        <strong> Code UE </strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong> Intitulé UE </strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong> Session 1 </strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong> Session 2 </strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong> Mention </strong>
+                                                    </th>
+                                                </tr>
+                                                <t t-set="note_2set" t-value="o.note_list_ids.compute_note_2set()"/>
+                                                <tr t-foreach="o.note_list_ids" t-as="note">
+                                                    <t t-if="note.note_2set == False">
+                                                        <td t-esc="note.unit_enseigne.code"/>
+                                                        <td t-esc="note.unit_enseigne.name"/>
+                                                        <td t-esc="note.note_session1"/>
+                                                        <td t-esc="note.note_session2"/>
+                                                        <td t-esc="note.mention"/>
+                                                    </t>
+                                                </tr>
+                                                <tr t-foreach="o.formation_id.units_enseignement_ids" t-as="ue">
+                                                    <t t-if="ue not in o.note_list_ids.mapped('unit_enseigne')">
+                                                        <td style="color: red" t-esc="ue.code"/>
+                                                        <td style="color: red" t-esc="ue.name"/>
+                                                        <td/><td/><td/>
+                                                    </t>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_historique_cursus_report"
+        model="inscription.edu"
+        report_type="qweb-html"
+        string="Historique Cursus"
+        name="amelioration_cnam.historique_cursus_pdf"
+        file="amelioration_cnam.historique_cursus_pdf" />
+
+</odoo>

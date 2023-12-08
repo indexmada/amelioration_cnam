@@ -45,5 +45,6 @@
         "views/certificat_scolarite.xml",
         "views/insc_recap.xml",
         "views/payment_report.xml",
+        "report/cursus_report.xml",
     ],
 }

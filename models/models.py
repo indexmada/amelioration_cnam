@@ -152,16 +152,22 @@ class InscriptionEdu(models.Model):
         if not self.student_id:
             return False
 
-        note_list_ids = self.env['note.list'].search([('partner_id', '=', self.student_id.id)])
-        return {
-            "name": "Historique Cursus",
-            'view_mode': 'list',
-            'res_model': 'note.list',
-            'type': 'ir.actions.act_window',
-            "domain": [('id', 'in', note_list_ids.ids)],
-            "context": {'search_default_groupe_by_ue': 1},
-        }
+        # note_list_ids = self.env['note.list'].search([('partner_id', '=', self.student_id.id)])
+        # return {
+        #     "name": "Historique Cursus",
+        #     'view_mode': 'list',
+        #     'res_model': 'note.list',
+        #     'type': 'ir.actions.act_window',
+        #     "domain": [('id', 'in', note_list_ids.ids)],
+        #     "context": {'search_default_groupe_by_ue': 1},
+        # }
+        return self.env.ref(
+            'amelioration_cnam.action_historique_cursus_report').report_action(self)
 
+    def get_insc_ids(self):
+        student_id = self.student_id
+        insc_ids = self.search([('student_id', '=', student_id.id), ('state', '!=', 'cancel')], order="school_year ASC")
+        return insc_ids
 
     def show_rel_note_inscription_details(self):
         insc_no_notes = self.sudo().search([]).filtered(lambda insc: insc.note_list_ids)
