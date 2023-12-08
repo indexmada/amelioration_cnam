@@ -23,13 +23,37 @@ class ExamExam(models.Model):
 
 	@api.model 
 	def create(self, vals):
-		if vals.get('date'):
-			active_id = self.exam_calandar_id.id or self._context.get('active_id')
-			result1 = self.env['exam.exam'].sudo().search([('date', '=', vals.get('date'))]).filtered(lambda x: x.exam_calandar_id.id != active_id)
-			if result1:
-				message = "Un examen existant à la date du "+vals.get('date')
-				raise UserError(_(message))
 		res = super(ExamExam, self).create(vals)
+		if vals.get('exam_calandar_id') and vals.get('ue_ids') and vals.get('centre_ue_id') and vals.get('date') and vals.get('start_time') and vals.get('end_time'):
+			calandar_id = self.exam_calandar_id or self.env['exam.calandar'].sudo().browse(vals.get('exam_calandar_id'))
+			school_year = calandar_id.school_year
+
+			unit_enseignes_obj = self.env['inscription.edu'].search([('state','in',('enf','accueil','account')), ('school_year', '=', school_year.id)]).mapped('units_enseignes')
+			other_ues_obj = self.env['inscription.edu'].search([('state','in',('enf','accueil','account')), ('school_year', '=', school_year.id)]).mapped('other_ue_ids')
+			unit_enseignes_obj |= other_ues_obj
+
+			ue_ids = self.env['unit.enseigne.config'].sudo().search([('id', 'in', vals.get('ue_ids')[0][2])])
+			center_ue_id = self.env['examen.center'].sudo().browse(vals.get('centre_ue_id'))
+
+			temp_insc_ids = unit_enseignes_obj.filtered(lambda u: u.name in ue_ids and center_ue_id.id == u.center_id.id and ((calandar_id.semester == u.semestre_id) or (calandar_id.semester_annuel and calandar_id.semester_annuel == u.semestre_id))).mapped('inscription_id')
+			temp_insc_ids |= unit_enseignes_obj.filtered(lambda u: u.name in ue_ids and center_ue_id.id == u.center_id.id and ((calandar_id.semester == u.semestre_id) or (calandar_id.semester_annuel and calandar_id.semester_annuel == u.semestre_id))).mapped('inscription_other_id')
+
+			center_ids = calandar_id.center_ids
+
+			insc_ids = temp_insc_ids.filtered(lambda insc: insc.region_center_id in center_ids)
+			
+			date_value = datetime.strptime(vals.get('date'), "%Y-%m-%d").date()
+
+			exam_repartition_obj = self.env['exam.repartition']
+
+			exam_repartition_ids = exam_repartition_obj.sudo().search([('exam_id', '!=', False)]).filtered(lambda x: x.exam_id.date == date_value and exam_repartition_obj.there_is_overlap(x.exam_id.start_time, x.exam_id.end_time, vals.get('start_time'), vals.get('end_time')) and x.inscription_id in insc_ids)
+			if exam_repartition_ids:
+				exam_rep_id = exam_repartition_ids[0]
+				str_start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(exam_rep_id.exam_id.start_time * 60, 60))
+				str_end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(exam_rep_id.exam_id.end_time * 60, 60))
+				message = "Un examen existant à la date du "+date_value.strftime('%d/%m/%Y')+" "+str_start_time+" à "+str_end_time+" Pour: "+exam_rep_id.inscription_id.display_name+" ("+exam_rep_id.inscription_id.name+")"
+				raise UserError(_(message))
+
 		return res
 
 class ExamRepartition(models.Model):
