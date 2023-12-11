@@ -35,7 +35,7 @@
                                                     </th>
                                                 </tr>
                                                 <t t-set="note_2set" t-value="o.note_list_ids.compute_note_2set()"/>
-                                                <tr t-foreach="o.note_list_ids" t-as="note">
+                                                <tr t-foreach="insc.note_list_ids" t-as="note">
                                                     <t t-if="note.note_2set == False">
                                                         <td t-esc="note.unit_enseigne.code"/>
                                                         <td t-esc="note.unit_enseigne.name"/>
@@ -44,8 +44,8 @@
                                                         <td t-esc="note.mention"/>
                                                     </t>
                                                 </tr>
-                                                <tr t-foreach="o.formation_id.units_enseignement_ids" t-as="ue">
-                                                    <t t-if="ue not in o.note_list_ids.mapped('unit_enseigne')">
+                                                <tr t-foreach="insc.formation_id.units_enseignement_ids" t-as="ue">
+                                                    <t t-if="ue not in insc.note_list_ids.mapped('unit_enseigne')">
                                                         <td style="color: red" t-esc="ue.code"/>
                                                         <td style="color: red" t-esc="ue.name"/>
                                                         <td/><td/><td/>
