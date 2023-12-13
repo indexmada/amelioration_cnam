@@ -163,8 +163,8 @@ class TutorServiceController(http.Controller):
                 for service in service_ids:
                     worksheet_ost.write("A"+str(line), semester_id.name, cell_center_11)
                     worksheet_ost.write("B"+str(line), service.ue_config_id.code, cell_center_11)
-                    worksheet_ost.write("C"+str(line), service.date_begin.strftime("%d/%m/%Y"), cell_center_11)
-                    worksheet_ost.write("D"+str(line), service.date_end.strftime("%d/%m/%Y"), cell_center_11)
+                    worksheet_ost.write("C"+str(line), service.date_begin.strftime("%d/%m/%Y") if service.date_begin else '', cell_center_11)
+                    worksheet_ost.write("D"+str(line), service.date_end.strftime("%d/%m/%Y") if service.date_begin else '', cell_center_11)
 
                     nb_hours = '{0:02.0f}h{1:02.0f}'.format(*divmod(float(service.nb_hours) * 60, 60))
                     worksheet_ost.write("E"+str(line), nb_hours, cell_center_11)
