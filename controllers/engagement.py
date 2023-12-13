@@ -285,7 +285,7 @@ class RecapEngagement(http.Controller):
                         # Montant
                         col += 1
                         cell = row_tab[col]+str(line)
-                        worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment else '', cell_right_12)
+                        worksheet_ost.write(cell, '{:,}' .format(round(payment.cost_devise, 2)) if payment else '', cell_right_12)
                         
                         # Date Payment
                         col += 1
