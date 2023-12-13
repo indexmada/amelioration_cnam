@@ -123,7 +123,7 @@ class ResTutorController(http.Controller):
                 worksheet_ost.merge_range(cell, "TOTAL", cell_center_bold_11)
                 worksheet_ost.write("D"+str(line), '{0:02.0f}h{1:02.0f}'.format(*divmod(float(total_duration) * 60, 60)), cell_center_bold_11)
 
-            line += 2
+                line += 2
 
     def style(self, worksheet):
         worksheet.set_column('A:E', 13)
