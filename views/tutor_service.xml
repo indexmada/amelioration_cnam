@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!-- Wizard Recap Honoraire Tuteur -->
+    <record id="xls_recap_honoraire_tuteur_form" model="ir.ui.view">
+        <field name="name">RecapHonoraireTuteur</field>
+        <field name="model">recap.honoraire</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="semester_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="generate_report" type="object" string="Exporter" class="btn-primary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <act_window id="xls_recap_honoraire_tuteur_action" name="Recap. Honoraire Tuteur" res_model="recap.honoraire" view_mode="form"
+                target="new"/>
+
+    <menuitem id="xls_recap_honoraire_tuteur"
+              name="Recap. Honoraire Tuteur "
+              parent="edu_management.menu_schooling"
+              sequence="70"
+              action="xls_recap_honoraire_tuteur_action"/>
+
+</odoo>

@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_recap_engagement,recap.engagement,model_recap_engagement,base.group_user,1,1,1,1
 access_insc_recap,insc.recap,model_insc_recap,base.group_user,1,1,1,1
+access_recap_honoraire,recap.honoraire,model_recap_honoraire,base.group_user,1,1,1,1

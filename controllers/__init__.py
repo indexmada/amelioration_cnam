@@ -6,3 +6,4 @@ from . import portal
 from . import insc_recap
 from . import note_list
 from . import res_tutor
+from . import tutor_service
