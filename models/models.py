@@ -230,3 +230,15 @@ class InscriptionEdu(models.Model):
     def uncheck_rel_note_sign(self):
         for insc in self:
             insc.write({'rel_note_sign': False})
+
+    def action_historique_engagement(self):
+        str_insc = ''
+        for insc in self:
+            str_insc += '-'+str(insc.id) if str_insc else str(insc.id)
+        school_year = False
+        actions = {
+            'type': 'ir.actions.act_url',
+            'target': 'current',
+            'url': '/web/binary/download_recap_engagement_xls_file?str_insc='+str_insc
+        }
+        return actions

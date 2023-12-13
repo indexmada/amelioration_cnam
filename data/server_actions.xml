@@ -118,4 +118,14 @@
             action = records.uncheck_rel_sign()
         </field>
     </record>
+
+    <!-- Historique Engagement dans Inscription -->
+    <record id="historique_engagement" model="ir.actions.server">
+        <field name="name">Historique Engagement</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_historique_engagement()
+        </field>
+    </record>
 </odoo>

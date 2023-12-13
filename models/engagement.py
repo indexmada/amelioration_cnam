@@ -15,6 +15,6 @@ class XlsComparison(models.Model):
             'type': 'ir.actions.act_url',
             'target': 'current',
             'url': '/web/binary/download_recap_engagement_xls_file?school_year='
-                   + school_year
+                   + school_year if school_year else ''
         }
         return actions

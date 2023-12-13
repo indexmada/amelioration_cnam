@@ -14,24 +14,30 @@ from datetime import date
 class RecapEngagement(http.Controller):
 
     @http.route('/web/binary/download_recap_engagement_xls_file', auth='public')
-    def  download_recap_engagement(self, school_year):
+    def  download_recap_engagement(self, school_year = False, str_insc = False):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output)
+        inscription_ids = False
+        if str_insc and str_insc != 'False':
+            insc_tab = [int(x) for x in str_insc.split('-')]
+            inscription_ids = request.env['inscription.edu'].sudo().search([('id', 'in', insc_tab)])
 
+        school_year_id = request.env['school.year'].browse(int(school_year)) if school_year and school_year != 'False' else False
 
-        school_year_id = request.env['school.year'].browse(int(school_year))
-
-        self.report_excel_recap_engagement(workbook, school_year_id)  
+        self.report_excel_recap_engagement(workbook, school_year_id, inscription_ids)  
         workbook.close()
         output.seek(0)
 
-        file_name = "Creance_"+school_year_id.name+"_arreté_du"+str(date.today())+".xlsx"
+        if school_year_id:
+            file_name = "Creance_"+school_year_id.name+"_arreté_du"+str(date.today())+".xlsx"
+        else:
+            file_name = "Creance_arreté_du"+str(date.today())+".xlsx"
 
         xlsheader = [('Content-Type', 'application/octet-stream'),
                      ('Content-Disposition', 'attachment; filename=%s;' % file_name)]
         return request.make_response(output, xlsheader)
 
-    def report_excel_recap_engagement(self, workbook, school_year_id):
+    def report_excel_recap_engagement(self, workbook, school_year_id, inscription_ids = False):
         center_bold_12 = workbook.add_format({
             'align': 'center',
             'valign': 'vcenter',
@@ -142,12 +148,24 @@ class RecapEngagement(http.Controller):
         row_tab = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
             'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-            'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ']
+            'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ']
 
 
         currency = ['Creance Ariary', 'Creance Euro']
 
-        all_creance = request.env['inscription.edu'].search([('school_year', '=', school_year_id.id), ('staggering_ok', '=', True)])
+        domain_filter = [('staggering_ok', '=', True)]
+
+        school_year_ids = school_year_id
+        if not school_year_id:
+            if not inscription_ids:
+                school_year_ids = request.env['school.year'].search([])
+            else:
+                school_year_ids = inscription_ids.mapped('school_year')
+                domain_filter += [('id', 'in', inscription_ids.ids)]
+
+        domain_filter += [('school_year', 'in', school_year_ids.ids)]
+
+        all_creance = request.env['inscription.edu'].search(domain_filter)
         ariary_ech = all_creance.filtered(lambda insc: insc.amount_total_ariary > 0)
         devise_ech = all_creance.filtered(lambda insc: insc.amount_total_euro > 0)
 
@@ -157,132 +175,137 @@ class RecapEngagement(http.Controller):
         for creance in currency:
             worksheet_ost = workbook.add_worksheet(creance)
             self.style(worksheet_ost)
-            worksheet_ost.write("A2", "N° Engagement", cell_bold_center_12)
-            worksheet_ost.write("B2", "NOM", cell_bold_center_12)
-            worksheet_ost.write("C2", "Montant Total", cell_bold_center_12)
-            worksheet_ost.write("D2", "Paiements", cell_bold_right_12)
-            worksheet_ost.write("E2", "Reste à Payer", cell_bold_right_12)
+            line = 2
+            for school_year_id in school_year_ids:
+                worksheet_ost.write("A"+str(line), "N° Engagement", cell_bold_center_12)
+                worksheet_ost.write("B"+str(line), "NOM", cell_bold_center_12)
+                worksheet_ost.write("C"+str(line), "Montant Total", cell_bold_center_12)
+                worksheet_ost.write("D"+str(line), "Paiements", cell_bold_right_12)
+                worksheet_ost.write("E"+str(line), "Reste à Payer", cell_bold_right_12)
 
-            i = 0
-            for row in row_tab:
-                cell = row+'3'
-                if i == 1:
-                    worksheet_ost.write(cell, 'Année Universitaire: '+school_year_id.name, cell_center_grey_12)
+                i = 0
+                for row in row_tab:
+                    cell = row+str(line+1)
+                    if i == 1:
+                        worksheet_ost.write(cell, 'Année Universitaire: '+school_year_id.name if school_year_id else 'TOUT', cell_center_grey_12)
+                        i += 1
+                        continue
+
+                    worksheet_ost.write(cell, '', cell_center_grey_12)
                     i += 1
-                    continue
 
-                worksheet_ost.write(cell, '', cell_center_grey_12)
-                i += 1
+                echelo = ariary_ech if creance == 'Creance Ariary' else devise_ech
+                echelo = echelo.filtered(lambda x: x.school_year == school_year_id)
 
-            echelo = ariary_ech if creance == 'Creance Ariary' else devise_ech
-
-            col = 5
-            temp = 0
-            for val in range(0,18):
-                month_year = self.get_month_year(school_year_id, temp)
-
-                col_init = col
-
-                cell = row_tab[col]+'2'
-                worksheet_ost.write(cell, 'Date', cell_bold_right_grey_12)
-
-                col+=1
-                cell = row_tab[col]+'2'
-                worksheet_ost.write(cell, 'Montant', cell_bold_right_grey_12)
-
-                col += 1
-                cell = row_tab[col]+'2'
-                worksheet_ost.write(cell, 'Date', cell_bold_right_12)
-
-                col +=1
-                cell = row_tab[col]+'2'
-                worksheet_ost.write(cell, 'N° Reçu', cell_bold_right_12)
-
-                col += 1
-                cell = row_tab[col]+'2'
-                worksheet_ost.write(cell, 'DEJA PAYE', cell_right_red_bold_12)
-
-                col_last = col
-                cell = row_tab[col_init]+'1:'+row_tab[col_last]+'1'
-                worksheet_ost.merge_range(cell, month_year, cell_bold_center_12)
-
-                col += 1
-                temp += 1
-
-            line = 4
-
-            for insc in echelo:
-                cell = "A"+str(line)
-                worksheet_ost.write(cell, insc.num_engagement, cell_center_12)
-
-                cell = "B"+str(line)
-                worksheet_ost.write(cell, insc.display_name, cell_center_12)
-
-                # Amount Total
-                cell = "C"+str(line)
-                if creance == 'Creance Ariary':
-                    amount_total = insc.amount_total_ariary
-                else:
-                    amount_total = insc.amount_total_euro
-                amount_total = round(amount_total, 2)
-                worksheet_ost.write(cell, '{:,}' .format(amount_total), cell_center_12)
-
-                # Amount Paid
-                cell = "D"+str(line)
-                if creance == "Creance Ariary":
-                    currency_val = currency_ariary
-                    paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_ariary))
-                else:
-                    currency_val = currency_euro
-                    paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_euro))
-                paid = round(paid, 2)
-                worksheet_ost.write(cell, '{:,}' .format(paid) if paid else '-', cell_bold_right_12)
-
-                # Amount Remain to pay
-                cell = "E"+str(line)
-                if creance == 'Creance Ariary':
-                    remain = insc.remain_to_pay_ariary
-                else:
-                    remain = insc.remain_to_pay_euro
-                remain = round(remain, 2)
-                worksheet_ost.write(cell, '{:,}' .format(remain) if remain else '-', cell_bold_right_12)
-
-                col = 4
-                temp = 6
+                col = 5
+                temp = 0
                 for val in range(0,18):
-                    date_from = self.get_date_from(school_year_id, temp)
-                    date_to = self.get_date_to(school_year_id, temp)
+                    month_year = self.get_month_year(school_year_id, temp)
 
-                    payments = insc.payment_inscription_ids.filtered(lambda pay: pay.date < date_to and pay.date > date_from and pay.currency_id == currency_val)
-                    payment = payments[0] if payments else False
-                    
-                    # Date Prevu
-                    col += 1
-                    cell = row_tab[col]+str(line)
-                    worksheet_ost.write(cell, str(payment.date).replace('-', '/') if payment else '', cell_right_12)
-                    
-                    # Montant
-                    col += 1
-                    cell = row_tab[col]+str(line)
-                    worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment else '', cell_right_12)
-                    
-                    # Date Payment
-                    col += 1
-                    cell = row_tab[col]+str(line)
-                    worksheet_ost.write(cell, '', cell_right_12)
-                    
-                    # N° Reçu
-                    col += 1
-                    cell = row_tab[col]+str(line)
-                    worksheet_ost.write(cell, '', cell_right_12)
+                    col_init = col
 
-                    # DEJA PAYE
+                    cell = row_tab[col]+str(line)
+                    worksheet_ost.write(cell, 'Date', cell_bold_right_grey_12)
+
+                    col+=1
+                    cell = row_tab[col]+str(line)
+                    worksheet_ost.write(cell, 'Montant', cell_bold_right_grey_12)
+
                     col += 1
                     cell = row_tab[col]+str(line)
-                    worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment and payment.payment_state == True else '', cell_right_12)
+                    worksheet_ost.write(cell, 'Date', cell_bold_right_12)
+
+                    col +=1
+                    cell = row_tab[col]+str(line)
+                    worksheet_ost.write(cell, 'N° Reçu', cell_bold_right_12)
+
+                    col += 1
+                    cell = row_tab[col]+str(line)
+                    worksheet_ost.write(cell, 'DEJA PAYE', cell_right_red_bold_12)
+
+                    col_last = col
+                    cell = row_tab[col_init]+str(line-1)+':'+row_tab[col_last]+str(line-1)
+                    worksheet_ost.merge_range(cell, month_year, cell_bold_center_12)
+
+                    col += 1
                     temp += 1
 
-                line += 1
+                line += 2
+
+                for insc in echelo:
+                    cell = "A"+str(line)
+                    worksheet_ost.write(cell, insc.num_engagement, cell_center_12)
+
+                    cell = "B"+str(line)
+                    worksheet_ost.write(cell, insc.display_name, cell_center_12)
+
+                    # Amount Total
+                    cell = "C"+str(line)
+                    if creance == 'Creance Ariary':
+                        amount_total = insc.amount_total_ariary
+                    else:
+                        amount_total = insc.amount_total_euro
+                    amount_total = round(amount_total, 2)
+                    worksheet_ost.write(cell, '{:,}' .format(amount_total), cell_center_12)
+
+                    # Amount Paid
+                    cell = "D"+str(line)
+                    if creance == "Creance Ariary":
+                        currency_val = currency_ariary
+                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_ariary))
+                    else:
+                        currency_val = currency_euro
+                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_euro))
+                    paid = round(paid, 2)
+                    worksheet_ost.write(cell, '{:,}' .format(paid) if paid else '-', cell_bold_right_12)
+
+                    # Amount Remain to pay
+                    cell = "E"+str(line)
+                    if creance == 'Creance Ariary':
+                        remain = insc.remain_to_pay_ariary
+                    else:
+                        remain = insc.remain_to_pay_euro
+                    remain = round(remain, 2)
+                    worksheet_ost.write(cell, '{:,}' .format(remain) if remain else '-', cell_bold_right_12)
+
+                    col = 4
+                    temp = 6
+                    for val in range(0,18):
+                        date_from = self.get_date_from(school_year_id, temp)
+                        date_to = self.get_date_to(school_year_id, temp)
+
+                        payments = insc.payment_inscription_ids.filtered(lambda pay: pay.date < date_to and pay.date > date_from and pay.currency_id == currency_val)
+                        payment = payments[0] if payments else False
+                        
+                        # Date Prevu
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        worksheet_ost.write(cell, str(payment.date).replace('-', '/') if payment else '', cell_right_12)
+                        
+                        # Montant
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment else '', cell_right_12)
+                        
+                        # Date Payment
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        worksheet_ost.write(cell, '', cell_right_12)
+                        
+                        # N° Reçu
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        worksheet_ost.write(cell, '', cell_right_12)
+
+                        # DEJA PAYE
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment and payment.payment_state == True else '', cell_right_12)
+                        temp += 1
+
+                    line += 1
+
+                line += 3
 
         # Onglet Suivi
         worksheet_ost = workbook.add_worksheet("Suivi")
