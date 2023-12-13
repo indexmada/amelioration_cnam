@@ -128,4 +128,14 @@
             action = records.action_historique_engagement()
         </field>
     </record>
+
+    <!-- POINTAGE PAR PROF -->
+    <record id="tutor_attendance" model="ir.actions.server">
+        <field name="name">Pointage Par Prof</field>
+        <field name="model_id" ref="edu_management.model_res_tutor"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_pointage_par_prof()
+        </field>
+    </record>
 </odoo>

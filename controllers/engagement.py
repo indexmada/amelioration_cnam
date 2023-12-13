@@ -300,7 +300,7 @@ class RecapEngagement(http.Controller):
                         # DEJA PAYE
                         col += 1
                         cell = row_tab[col]+str(line)
-                        worksheet_ost.write(cell, '{:,}' .format(payment.cost_devise) if payment and payment.payment_state == True else '', cell_right_12)
+                        worksheet_ost.write(cell, '{:,}' .format(round(payment.cost_devise,2)) if payment and payment.payment_state == True else '', cell_right_12)
                         temp += 1
 
                     line += 1
