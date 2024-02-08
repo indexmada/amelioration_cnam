@@ -13,6 +13,169 @@ from datetime import date
 
 class TutorServiceController(http.Controller):
 
+    @http.route('/web/binary/download_report_payroll_xlsx', auth='public')
+    def download_report_payroll_xlsx(self, str_id=False):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+
+        id_tab = [int(x) for x in str_id.split('-')]
+        domain = [('id', 'in', id_tab)]
+        tutor_service_ids = request.env['tutor.service'].sudo().search(domain)
+        self.report_excel_payroll(workbook, tutor_service_ids)  
+        workbook.close()
+        output.seek(0)
+
+        file_name = "Etat_de_paie_tuteur.xlsx"
+
+        xlsheader = [('Content-Type', 'application/octet-stream'),
+                     ('Content-Disposition', 'attachment; filename=%s;' % file_name)]
+        return request.make_response(output, xlsheader)
+
+    def report_excel_payroll(self, workbook, service_ids):
+        center_11 = workbook.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            "font_size": 11,
+            })
+
+        left_11 = workbook.add_format({
+            'align': 'left',
+            'valign': 'vleft',
+            "font_size": 11,
+            })
+
+        left_11_italic = workbook.add_format({
+            'align': 'left',
+            'valign': 'vleft',
+            "font_size": 11,
+            "italic": True,
+            })
+
+        center_11_bold = workbook.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            "font_size": 11,
+            "bold": True,
+            })
+
+        cell_center_11_bold = workbook.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            'top': 1,
+            'left': 1,
+            'right': 1,
+            'bottom': 1,
+            'right_color': 'black',
+            'bottom_color': 'black',
+            'top_color': 'black',
+            'left_color': 'black',
+            "font_size": 11,
+            "bold": True,
+            })
+        cell_right_11_bold = workbook.add_format({
+            'align': 'right',
+            'valign': 'vcenter',
+            'top': 1,
+            'left': 1,
+            'right': 1,
+            'bottom': 1,
+            'right_color': 'black',
+            'bottom_color': 'black',
+            'top_color': 'black',
+            'left_color': 'black',
+            "font_size": 11,
+            "bold": True,
+            })
+
+        dg_cell_center_11 = workbook.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            'left': 1,
+            'right': 1,
+            'right_color': 'black',
+            'left_color': 'black',
+            "font_size": 11,
+            })
+        cell_tot_1 = workbook.add_format({
+            'align': 'right',
+            'valign': 'vcenter',
+            'left': 1,
+            'right': 1,
+            'right_color': 'black',
+            'left_color': 'black',
+            "font_size": 11,
+            })
+
+        count = 1
+        for service_id in service_ids:
+            worksheet_ost = workbook.add_worksheet("feuille"+str(count))
+            self.payroll_style(worksheet_ost)
+            count += 1
+
+            logo_image = io.BytesIO(base64.b64decode(request.env.company.logo))
+            worksheet_ost.insert_image('A1', "image.png", {'image_data': logo_image,'x_scale': 0.50,'y_scale':0.50})
+            worksheet_ost.merge_range("A5:B5", "CENTRE  Cnam Madagascar", center_11)
+            worksheet_ost.merge_range("A6:B6", "Maison des Produits 67 Ha – 6ème Etage", center_11)
+            worksheet_ost.merge_range("A7:B7", "Antananarivo 101", center_11)
+            worksheet_ost.merge_range("A8:B8", "Madagascar", center_11)
+            worksheet_ost.merge_range("A9:B9", "--------------------------------", center_11)
+            worksheet_ost.merge_range("A10:B10", "Tèl. 261 38 22 290 19", center_11)
+            worksheet_ost.merge_range("A11:B11", "E-mail: cnam.madagascar@yahoo.com", center_11)
+
+            worksheet_ost.write("C13", "ETAT DE PAIEMENT", center_11_bold)
+            worksheet_ost.write("C14", "Indemnité: 2023 - 2024", center_11_bold)
+
+            worksheet_ost.write("A16", "NOM", cell_center_11_bold)
+            worksheet_ost.write("B16", "FONCTION", cell_center_11_bold)
+            worksheet_ost.write("C16", "LIBELLE", cell_center_11_bold)
+            worksheet_ost.write("D16", "Montant (Ar)", cell_center_11_bold)
+            worksheet_ost.write("E16", "EMARGEMENT", cell_center_11_bold)
+
+            worksheet_ost.write("A17", "", dg_cell_center_11)
+            worksheet_ost.write("B17", "", dg_cell_center_11)
+            worksheet_ost.write("C17", "", dg_cell_center_11)
+            worksheet_ost.write("D17", "", dg_cell_center_11)
+            worksheet_ost.write("E17", "", dg_cell_center_11)
+
+            worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
+            worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
+            worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
+            worksheet_ost.write("D18", '{:,}' .format(service_id.amount), cell_tot_1)
+            worksheet_ost.write("E18", "", dg_cell_center_11)
+
+            worksheet_ost.write("A19", service_id.tutor_id.name, dg_cell_center_11)
+            worksheet_ost.write("B19", "", dg_cell_center_11)
+            worksheet_ost.write("C19", service_id.semestre_id.name, dg_cell_center_11)
+            worksheet_ost.write("D19", "", cell_tot_1)
+            worksheet_ost.write("E19", "", dg_cell_center_11)
+
+            worksheet_ost.write("A20", "", dg_cell_center_11)
+            worksheet_ost.write("B20", "", dg_cell_center_11)
+            worksheet_ost.write("C20", "", dg_cell_center_11)
+            worksheet_ost.write("D20", "", dg_cell_center_11)
+            worksheet_ost.write("E20", "", dg_cell_center_11)
+
+            worksheet_ost.write("A21", "", dg_cell_center_11)
+            worksheet_ost.write("B21", "", dg_cell_center_11)
+            worksheet_ost.write("C21", "", dg_cell_center_11)
+            worksheet_ost.write("D21", "", dg_cell_center_11)
+            worksheet_ost.write("E21", "", dg_cell_center_11)
+
+            # TOTAL LINE
+            worksheet_ost.write("A22", "TOTAL", cell_center_11_bold)
+            worksheet_ost.write("B22", "", cell_center_11_bold)
+            worksheet_ost.write("C22", "", cell_center_11_bold)
+            worksheet_ost.write("D22", '{:,}' .format(service_id.amount), cell_right_11_bold)
+            worksheet_ost.write("E22", "", cell_center_11_bold)
+
+            currency_ariary = request.env.ref('base.MGA')
+
+            worksheet_ost.write("A25", "Arrêté le présent état à la somme de: "+ currency_ariary.amount_to_text(service_id.amount), left_11)
+            worksheet_ost.write("D27", "Antananarivo,", left_11_italic)
+
+            worksheet_ost.write("D30", "Le Directeur",center_11)
+            worksheet_ost.write("D35", "Jocelyn RASOANAIVO", center_11)
+
     @http.route('/web/binary/download_recap_honoraire_tuteur_xlsx', auth='public')
     def  download_recap_honoraire(self, str_semester = False):
         output = io.BytesIO()
@@ -131,7 +294,7 @@ class TutorServiceController(http.Controller):
             sheet_name = "Recap honoraire Tuteur "+semester_id.display_name
             worksheet_ost = workbook.add_worksheet(sheet_name)
             self.style(worksheet_ost)
-            worksheet_ost.write("A1", "RECAP HONORAIRE TUTEUR"+semester_id.name+" "+semester_id.school_year_id.name, left_bold_11)
+            worksheet_ost.write("A1", "RECAP "+semester_id.name+" "+semester_id.school_year_id.name, left_bold_11)
 
             line = 3
             header_tab = ["Semestre", "UE", "Debut", "Fin cours", "Nb heures", "Taux Horaire", "Taux accompte", "Heure Passer", 
@@ -242,3 +405,8 @@ class TutorServiceController(http.Controller):
         worksheet.set_column("J:J", 16)
         worksheet.set_column("K:M", 14)
         worksheet.set_column("N:N", 12)
+
+    def payroll_style(self, worksheet):
+        worksheet.set_column("A:A", 48)
+        worksheet.set_column("B:C", 28)
+        worksheet.set_column("D:E", 19)
