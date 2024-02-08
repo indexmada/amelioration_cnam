@@ -1,0 +1,52 @@
+<odoo>
+  <data>
+
+    <record id="school_year_view_tree" model="ir.ui.view">
+      <field name="name">Année Universitaire</field>
+      <field name="model">school.year</field>
+      <field name="arch" type="xml">
+        <tree create="false">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="enipa" model="ir.actions.act_window">
+        <field name="name">Etudiant Non Inscrit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.year</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="school_year_view_tree"></field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun AU trouvé
+            </p>
+        </field>
+    </record>
+
+    <record id="enipa_form" model="ir.ui.view">
+      <field name="name">school_year_enipa_form</field>
+      <field name="model">school.year</field>
+      <field name="arch" type="xml">
+        <form create="false" edit="false">
+          <sheet>
+            <group>
+              <field name="name"/>
+            </group>
+            <notebook>
+              <page string="Elèves non Inscrit">
+                <field name="enipa"/>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <menuitem id="enipa_menu"
+              name="Etudiants non Inscrit par Années"
+              parent="edu_management.menu_schooling"
+              sequence="3"
+              action="enipa"/>
+  </data>
+</odoo>

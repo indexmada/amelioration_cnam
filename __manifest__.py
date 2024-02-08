@@ -47,5 +47,6 @@
         "views/payment_report.xml",
         "report/cursus_report.xml",
         "views/tutor_service.xml",
+        "views/student.xml",
     ],
 }

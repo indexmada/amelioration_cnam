@@ -15,3 +15,4 @@ from . import insc_recap
 from . import res_tutor
 from . import tutor_service
 from . import import_inscription
+from . import school_year
