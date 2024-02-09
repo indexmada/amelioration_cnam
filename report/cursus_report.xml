@@ -11,7 +11,7 @@
                                 Historique Cursus: <t t-esc="o.display_name"/>
                             </h1>
                             <div>
-                                <t t-set="insc_ids" t-value="o.get_insc_ids()"/>
+                                <t t-set="insc_ids" t-value="o"/>
                                 <t t-foreach="insc_ids" t-as="insc">
                                     <h3> Année Universitaire: <t t-esc="insc.school_year.name"/></h3>
                                     <div>
@@ -44,15 +44,28 @@
                                                         <td t-esc="note.mention"/>
                                                     </t>
                                                 </tr>
-                                                <tr t-foreach="insc.formation_id.units_enseignement_ids" t-as="ue">
-                                                    <t t-if="ue not in insc.note_list_ids.mapped('unit_enseigne')">
-                                                        <td style="color: red" t-esc="ue.code"/>
-                                                        <td style="color: red" t-esc="ue.name"/>
-                                                        <td/><td/><td/>
-                                                    </t>
-                                                </tr>
                                             </table>
                                         </div>
+                                    </div>
+
+                                    <h3>UE restantes à valider</h3>
+                                    <div>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th>
+                                                    <strong> Code UE </strong>
+                                                </th>
+                                                <th>
+                                                    <strong> Intitulé UE </strong>
+                                                </th>
+                                            </tr>
+                                            <tr t-foreach="insc.formation_id.units_enseignement_ids" t-as="ue">
+                                                <t t-if="ue not in insc.note_list_ids.mapped('unit_enseigne')">
+                                                    <td style="color: red" t-esc="ue.code"/>
+                                                    <td style="color: red" t-esc="ue.name"/>
+                                                </t>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </t>
                             </div>
