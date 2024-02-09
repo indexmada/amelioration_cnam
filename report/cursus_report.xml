@@ -59,10 +59,13 @@
                                                     <strong> Intitulé UE </strong>
                                                 </th>
                                             </tr>
+                                            <t t-set="t" t-value="[]"/>
                                             <tr t-foreach="insc.formation_id.units_enseignement_ids" t-as="ue">
-                                                <t t-if="ue.code not in insc.note_list_ids.filtered(lambda x: x.validation == 'validated').mapped('unit_enseigne').mapped('code')">
+                                                <t t-if="ue.code not in insc.note_list_ids.filtered(lambda x: x.validation == 'validated').mapped('unit_enseigne').mapped('code') and ue.code not in t">
                                                     <td style="color: red" t-esc="ue.code"/>
                                                     <td style="color: red" t-esc="ue.name"/>
+                                                    <t t-set="temp" t-value="t"/>
+                                                    <t t-set="t" t-value="temp+[ue.code]"/>
                                                 </t>
                                             </tr>
                                         </table>
