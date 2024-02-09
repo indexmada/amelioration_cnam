@@ -60,7 +60,7 @@
                                                 </th>
                                             </tr>
                                             <tr t-foreach="insc.formation_id.units_enseignement_ids" t-as="ue">
-                                                <t t-if="ue not in insc.note_list_ids.mapped('unit_enseigne')">
+                                                <t t-if="ue.code not in insc.note_list_ids.mapped('unit_enseigne').mapped('code')">
                                                     <td style="color: red" t-esc="ue.code"/>
                                                     <td style="color: red" t-esc="ue.name"/>
                                                 </t>
