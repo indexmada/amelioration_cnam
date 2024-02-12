@@ -6,21 +6,25 @@
         <template id="attestation">
             <t t-call="web.html_container">
                 <t t-call="edu_management.internal_layout">
+                    <t t-set="ar" t-value="[]"/>
                     <t t-foreach="docs" t-as="o">
-                        <t t-set="o" t-value="o.with_context(lang=lang)" />
-                        <t t-if="not company">
-                            <!-- Multicompany -->
-                            <t t-if="company_id">
-                                <t t-set="company" t-value="company_id"/>
+                        <t t-if="o.partner_id.id not in ar">
+                            <t t-set="temp" t-value="ar"/>
+                            <t t-set="ar" t-value="temp + [o.partner_id.id]"/>
+                            <t t-set="o" t-value="o.with_context(lang=lang)" />
+                            <t t-if="not company">
+                                <!-- Multicompany -->
+                                <t t-if="company_id">
+                                    <t t-set="company" t-value="company_id"/>
+                                </t>
+                                <t t-elif="o and 'company_id' in o">
+                                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                                </t>
+                                <t t-else="else">
+                                    <t t-set="company" t-value="res_company"/>
+                                </t>
                             </t>
-                            <t t-elif="o and 'company_id' in o">
-                                <t t-set="company" t-value="o.company_id.sudo()"/>
-                            </t>
-                            <t t-else="else">
-                                <t t-set="company" t-value="res_company"/>
-                            </t>
-                        </t>
-                        <t t-set="notes" t-value="env['note.list'].sudo().get_note_by_student(o.sudo().partner_id.id)"/>
+                            <t t-set="notes" t-value="env['note.list'].sudo().get_note_by_student(o.sudo().partner_id.id)"/>
                             <div t-if="notes" class="page" style="font-family: 'arial';">
                                 <strong><u> Réf :</u></strong>
                                 <div class="text-center"><h4><strong>  ATTESTATION DE REUSSITE  </strong></h4></div>
@@ -68,7 +72,7 @@
                                 </div>
                                 <br/>
                                 <div>
-                                    A validé toutes les Unités d'Enseignements composants son cursus suivantes:
+                                    A validé les Unités d'Enseignements suivantes
                                 </div>
                                 <br/>
                                 <table class="table table-bordered">
@@ -123,6 +127,7 @@
                                 </div>
                             </div>
                             <p style="page-break-after:always"/>
+                        </t>
                     </t>  
                 </t>          
             </t>

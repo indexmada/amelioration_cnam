@@ -222,13 +222,16 @@ class RecapEngagement(http.Controller):
 
                 x_total_mga = 0
                 x_total_currency = 0
+
+                ue_count = 0
+                n_order = 1
                 for insc in insc_res_ids:
                     total_mga = 0
                     total_currency = 0
                     i = 0
                     count += 1
                     # N° Ordre
-                    worksheet_ost.write(row_tab[i]+str(line), str(insc.id), cell_center_10)
+                    worksheet_ost.write(row_tab[i]+str(line), n_order, cell_center_10)
 
                     # Date
                     i += 1
@@ -320,16 +323,20 @@ class RecapEngagement(http.Controller):
                     worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_currency, 2)),cell_right_10)
 
                     # TOTAL UE
-                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                    total_ue = len(insc.units_enseignes + insc.other_ue_ids)
+                    worksheet_ost.write(row_tab[i+2]+str(line), total_ue, cell_right_10)
                     line += 1
+
+                    ue_count += total_ue
 
                     # Total
                     x_total_mga += total_mga
                     x_total_currency += total_currency
+                    n_order += 1
 
                 worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(x_total_mga, 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(x_total_currency, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), ue_count, cell_right_10)
 
                 line += 2
                 # Total arrêté ce: jj/mm/AAAA
@@ -337,7 +344,7 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(row_tab[i-3]+str(line), datetime.strftime(insc_date, "%d/%m/%Y"), right_10)
                 worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(x_total_mga, 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(x_total_currency, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), ue_count, cell_right_10)
 
 
                 # Années à comparer
@@ -360,7 +367,7 @@ class RecapEngagement(http.Controller):
                     total_devise1 = sum(x.cost_devise for x in ue1_ids.filtered(lambda u: u.currency_id.name!='MGA'))
                     worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga1, 2)), cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise1, 2)), cell_right_10_yellow)
-                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), len(ue1_ids), cell_right_10_yellow)
                 else:
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10_yellow)
@@ -371,7 +378,7 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
                 worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga1 - x_total_mga), 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise1 - x_total_currency), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue1_ids)), cell_right_10)
 
                 # Année 2
                 year_name2 = str(int(year_tab[0])-2)+'-'+str(int(year_tab[1])-2)
@@ -388,7 +395,7 @@ class RecapEngagement(http.Controller):
                     total_devise2 = sum(x.cost_devise for x in ue2_ids.filtered(lambda u: u.currency_id.name!='MGA'))
                     worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga2, 2)), cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise2, 2)), cell_right_10_yellow)
-                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+2]+str(line), len(ue2_ids), cell_right_10_yellow)
                 else:
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10_yellow)
@@ -399,7 +406,7 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
                 worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga2 - x_total_mga), 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise2 - x_total_currency), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue2_ids)), cell_right_10)
                 
                 line += 2
 
