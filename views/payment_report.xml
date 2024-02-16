@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-2 offset-1">
                         <br/><br/>
-                        N° ...............
+                        N° <t t-esc="o.communication or '...................'"/>
                     </div>
                 </div>
             </div>
@@ -150,11 +150,24 @@
                                             Paiment:
                                         </td>
                                         <td>
-                                            <i class="fa fa-square-o"/> Chèque.................................<br/>
-                                            <i class="fa fa-square-o"/> Espèce <br/>
+                                            <i t-if="o.journal_id.type == 'bank'" class="fa fa-check-square"/>
+                                            <i t-else="" class="fa fa-square-o"/> Chèque
+                                            <t t-if="o.journal_id.type == 'bank'">
+                                                <t t-esc="o.partner_bank_account_id.bank_id.name"/>
+                                            </t>
+                                            <t t-else="">.................................</t><br/>
+                                            <i t-if="o.journal_id.type == 'cash'" class="fa fa-check-square"/>
+                                            <i t-else="" class="fa fa-square-o"/> Espèce <br/>
                                         </td>
                                         <td>
-                                            N°.............................................................................................................   Antananarivo le <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/><br/>
+                                            N°
+                                            <t t-if="o.journal_id.type == 'bank'">
+                                                <t t-esc="o.partner_bank_account_id.acc_number"/> 
+                                            </t>
+                                            <t t-else="">
+                                            .............................................................................................................
+                                            </t>   
+                                            Antananarivo le <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/><br/>
                                             <i class="fa fa-square-o"/> Autre à préciser: ................................................
                                         </td>
                                     </tr>
