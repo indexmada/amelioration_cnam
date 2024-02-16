@@ -49,6 +49,7 @@
             <field name="num_engagement"/>
         </xpath>
         <xpath expr="//page[@name='payment']/field[@name='payment_inscription_ids']/tree/field[@name='cost_devise']" position="after">
+            <field name="report_irrec" attrs="{'column_invisible': [('parent.insc_demande_report', '=', False)]}"/>
             <field name="report_date" attrs="{'column_invisible': [('parent.insc_demande_report', '=', False)]}"/>
             <field name="report_granted" attrs="{'column_invisible': [('parent.insc_demande_report', '=', False)]}"/>
             <field name="state"/>

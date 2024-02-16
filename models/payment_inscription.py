@@ -21,21 +21,25 @@ class PaymentInscription(models.Model):
 
 	report_date = fields.Date("Date de report")
 	report_granted = fields.Boolean("Report Accordé")
+	report_irrec = fields.Boolean(string = "Report Irrecouvrable", default = False)
 	state = fields.Selection(string="Statut", selection=STATE_INSC_PAY_SELECT, compute="change_state", store = True, default='non-paid')
 
-	@api.depends("remain_to_pay_payment", "payment_state", "inscription_id.insc_demande_report", "inscription_id", "report_date", "report_granted")
+	@api.depends("remain_to_pay_payment", "payment_state", "inscription_id.insc_demande_report", "inscription_id", "report_date", "report_granted", "report_irrec")
 	def change_state(self):
 		for rec in self:
-			if rec.remain_to_pay_payment <= 0:
-				rec.state = 'paid'
+			if rec.report_irrec: 
+				rec.state = 'irrecouvrable'
 			else:
-				if rec.inscription_id.insc_demande_report == True and rec.report_date:
-					if rec.report_granted:
-						rec.state = 'granted'
-					else:
-						rec.state = 'request'
+				if rec.remain_to_pay_payment <= 0:
+					rec.state = 'paid'
 				else:
-					rec.state = 'non-paid'
+					if rec.inscription_id.insc_demande_report == True and rec.report_date:
+						if rec.report_granted:
+							rec.state = 'granted'
+						else:
+							rec.state = 'request'
+					else:
+						rec.state = 'non-paid'
 
 	def compute_remain_to_pay(self):
 		for record in self:
