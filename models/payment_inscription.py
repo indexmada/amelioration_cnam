@@ -44,7 +44,7 @@ class PaymentInscription(models.Model):
 	def compute_payment_val(self):
 		for rec in self:
 			pi_ids = self.env['account.payment'].sudo().search([('state', '!=', 'draft')]).filtered(lambda x: rec in x.payment_inscription_ids)
-			rec.payment_ids = pi_ids
+			rec.payment_ids = pi_ids.ids
 
 	def compute_amount_paid_payment(self):
 		for rec in self:

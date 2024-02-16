@@ -148,7 +148,8 @@ class RecapEngagement(http.Controller):
         row_tab = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
             'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-            'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ']
+            'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ',
+            'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI']
 
 
         currency = ['Creance Ariary', 'Creance Euro']
@@ -222,6 +223,11 @@ class RecapEngagement(http.Controller):
                     col += 1
                     cell = row_tab[col]+str(line)
                     worksheet_ost.write(cell, 'DEJA PAYE', cell_right_red_bold_12)
+
+                    # New column Report
+                    col += 1
+                    cell = row_tab[col]+str(line)
+                    worksheet_ost.write(cell, "Report", cell_bold_right_12)
 
                     col_last = col
                     cell = row_tab[col_init]+str(line-1)+':'+row_tab[col_last]+str(line-1)
@@ -302,6 +308,23 @@ class RecapEngagement(http.Controller):
                         cell = row_tab[col]+str(line)
                         worksheet_ost.write(cell, '{:,}' .format(round(payment.cost_devise,2)) if payment and payment.payment_state == True else '', cell_right_12)
                         temp += 1
+
+                        # Report
+                        col += 1
+                        cell = row_tab[col]+str(line)
+                        report = ''
+                        if payment:
+                            if payment.state == 'request':
+                                report = 'Report demandé'
+                            elif payment.state == 'granted':
+                                report = 'Report accordé'
+                            elif payment.state == 'irrecouvrable':
+                                report = 'Irrecouvrable'
+                            elif  payment.state == 'paid':
+                                report = 'Soldé'
+                            elif  payment.state == 'non-paid':
+                                report = 'Non Soldé'
+                        worksheet_ost.write(cell, report, cell_right_12)
 
                     line += 1
 
@@ -432,7 +455,7 @@ class RecapEngagement(http.Controller):
     def style(self, worksheet):
         worksheet.set_column('A:A', 16)
         worksheet.set_column('B:B', 55)
-        worksheet.set_column('C:CZ', 20)
+        worksheet.set_column('C:DI', 20)
         worksheet.set_row(1, 20)
 
     def style_suivi(self, worksheet):
