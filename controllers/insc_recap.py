@@ -50,6 +50,12 @@ class RecapEngagement(http.Controller):
             })
         right_10 = workbook.add_format({
             'align': 'right',
+            'valign': 'vcenter',
+            "font_size": 10,
+            "bold": False,
+            })
+        right_10 = workbook.add_format({
+            'align': 'right',
             'valign': 'vright',
             "font_size": 10,
             "bold": False,
@@ -180,9 +186,14 @@ class RecapEngagement(http.Controller):
             insc_dates = insc_ids.mapped("inscription_date")
             line = 6
             insc_dates = self.remove_duplicate_date(insc_dates)
+            number = 1
             for insc_date in insc_dates:
                 worksheet_ost.merge_range("E"+str(line)+":G"+str(line), "RECAPITULATIF DES INSCRIPTIONS "+str(year.name), center_10)
                 line += 1
+                number_str = ("LISTE 0" if number <10 else "LISTE") + str(number)
+                worksheet_ost.write("A"+str(line), number_str, center_10)
+                number += 1
+
                 worksheet_ost.merge_range("E"+str(line)+":G"+str(line), "Arrêté le: "+datetime.strftime(insc_date, "%d/%m/%Y"), center_10_bold)
                 line += 1
                 # Numéro records en colonne
@@ -198,14 +209,24 @@ class RecapEngagement(http.Controller):
 
                 # Fill UE header
                 j = 0
+                nb = 1
                 for ue in range(0, max_length+3):
                     val = "UE" if j < max_length else "DIB" if j<max_length+1 else "FD" if j<max_length+2 else "FC"
-                    worksheet_ost.merge_range(row_tab[i]+str(line)+":"+row_tab[i+2]+str(line), val, cell_center_10_bold)
-                    worksheet_ost.merge_range(row_tab[i]+str(line+1)+":"+row_tab[i]+str(line+2), "Code", cell_center_10_bold)
-                    worksheet_ost.merge_range(row_tab[i+1]+str(line+1)+":"+row_tab[i+2]+str(line+1), "Montant", cell_center_10_bold)
-                    worksheet_ost.write(row_tab[i+1]+str(line+2), "Ariary", cell_center_10_bold)
-                    worksheet_ost.write(row_tab[i+2]+str(line+2), "Euro", cell_center_10_bold)
-                    i += 3
+                    if j < max_length:
+                        worksheet_ost.write(row_tab[i]+str(line-1), str(nb), right_10)
+                        nb += 1
+                        worksheet_ost.merge_range(row_tab[i]+str(line)+":"+row_tab[i+2]+str(line), val, cell_center_10_bold)
+                        worksheet_ost.merge_range(row_tab[i]+str(line+1)+":"+row_tab[i]+str(line+2), "Code", cell_center_10_bold)
+                        worksheet_ost.merge_range(row_tab[i+1]+str(line+1)+":"+row_tab[i+2]+str(line+1), "Montant", cell_center_10_bold)
+                        worksheet_ost.write(row_tab[i+1]+str(line+2), "Ariary", cell_center_10_bold)
+                        worksheet_ost.write(row_tab[i+2]+str(line+2), "Euro", cell_center_10_bold)
+                        i += 3
+                    else:
+                        worksheet_ost.merge_range(row_tab[i]+str(line)+":"+row_tab[i+1]+str(line), val, cell_center_10_bold)
+                        worksheet_ost.merge_range(row_tab[i]+str(line+1)+":"+row_tab[i+1]+str(line+1), "Montant", cell_center_10_bold)
+                        worksheet_ost.write(row_tab[i]+str(line+2), "Ariary", cell_center_10_bold)
+                        worksheet_ost.write(row_tab[i+1]+str(line+2), "Euro", cell_center_10_bold)
+                        i += 2
                     j += 1
 
                 # TOTAL GENERAL HEADER
@@ -293,30 +314,30 @@ class RecapEngagement(http.Controller):
 
                     # DIB
                     if insc.dib:
-                        worksheet_ost.write(row_tab[i]+str(line), "DIB", cell_left_10)
+                        # worksheet_ost.write(row_tab[i]+str(line), "DIB", cell_left_10)
                         if insc.dib_currency_id.name == "MGA":
-                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
-                            worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
-                        else:
+                            worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
                             worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
-                            worksheet_ost.write(row_tab[i+2]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
+                        else:
+                            worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10)
+                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
 
                     else: 
-                        worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                        # worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                        worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10)
                         worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
-                        worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
 
-                    i += 3
+                    i += 2
                     # FD & FC
-                    worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                    # worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10)
                     worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
-                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
-                    i += 3
+                    i += 2
 
-                    worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                    # worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10)
                     worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
-                    worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
-                    i += 3
+                    i += 2
 
                     # TOTAL GENERAL
                     worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga, 2)),cell_right_10)
