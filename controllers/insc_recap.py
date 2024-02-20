@@ -381,6 +381,7 @@ class RecapEngagement(http.Controller):
                 plage_date = [d1, d2, d3]
                 total_mga1 = 0
                 total_devise1 = 0
+                ue1_ids = []
                 if year_1:
                     insc1_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_1.id)])
                     ue1_ids = insc1_ids.mapped('units_enseignes') + insc1_ids.mapped('other_ue_ids')
@@ -409,6 +410,7 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(row_tab[i-1]+str(line), year_name2, cell_left_10_bold_yellow)
                 total_mga2 = 0
                 total_devise2 = 0
+                ue2_ids = []
                 if year_1:
                     insc2_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_2.id)])
                     ue2_ids = insc2_ids.mapped('units_enseignes') + insc2_ids.mapped('other_ue_ids')
