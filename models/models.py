@@ -18,11 +18,34 @@ class UnitEnseigneConfig(models.Model):
         self.global_insc_stored = global_insc_stored
         return global_insc_stored
 
-    ue_state = fields.Selection(string="STATUT", selection=SELECTION_STATE, default="pre-inscription", tracking=True, track_visibility='always')
+    ue_state = fields.Selection(string="STATUT UE ACTUEL", selection=SELECTION_STATE, default="pre-inscription", tracking=True, track_visibility='always')
+    ue_state_modif = fields.Selection(string="Status UE", selection='_get_selection_state', tracking=True, track_visibility='always')
     is_allowed_group_user = fields.Boolean(string="Groups", compute="compute_groupes")
     global_insc_stored = fields.Many2one("inscription.edu", string="Etudiants", compute="get_global_insc_stored", default=get_default_global_insc, store=True)
 
     school_year = fields.Many2one("school.year", string="Année Universitaire", compute="compute_school_year", store=True)
+
+    def _get_selection_state(self):
+        state = []
+        if self.env.user.has_group('amelioration_cnam.group_ue_validator'):
+            state.append(('accueil','Validé Accueil'))
+        if self.env.user.has_group('amelioration_cnam.group_ue_validator_compta'):
+            state.append(('account', ('Validé comptable')))
+        if self.env.user.has_group('amelioration_cnam.group_ue_validator_enf'):
+            state.append(('enf', 'Validé ENF'))
+
+        return state
+
+    def write(self, vals):
+        if vals.get('ue_state_modif'):
+            vals['ue_state'] = vals.get('ue_state_modif')
+        res = super(UnitEnseigneConfig, self).write(vals)
+        return res
+
+    @api.onchange('ue_state_modif')
+    def change_ue_state(self):
+        for rec in self:
+            rec.ue_state = rec.ue_state_modif
 
     def compute_groupes(self):
         for rec in self:
