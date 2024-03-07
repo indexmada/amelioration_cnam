@@ -31,13 +31,13 @@
 
         <xpath expr="//page[@name='units_enseigne']/field/tree/field[last()]" position="after">
             <field name="is_allowed_group_user" invisible="1" />
-            <field name="ue_state" string="Statut actuel" attrs="{'readonly': 1}" widget="select_custom_widget"/>
-            <field name="ue_state_modif" string="Statut suivant" attrs="{'readonly': [('is_allowed_group_user', '=', False)]}"/>
+            <field name="ue_state" string="Statut initial" attrs="{'readonly': 1}" widget="select_custom_widget"/>
+            <field name="ue_state_modif" string="Statut actuel" attrs="{'readonly': [('is_allowed_group_user', '=', False)]}"/>
         </xpath> 
         <xpath expr="//page[@name='other_ue']/field/tree/field[last()]" position="after">
             <field name="is_allowed_group_user" invisible="1" />
-            <field name="ue_state" string="Statut actuel" attrs="{'readonly': 1}" widget="select_custom_widget"/>
-            <field name="ue_state_modif" string="Statut suivant" attrs="{'readonly': [('is_allowed_group_user', '=', False)]}"/>
+            <field name="ue_state" string="Statut initial" attrs="{'readonly': 1}" widget="select_custom_widget"/>
+            <field name="ue_state_modif" string="Statut actuel" attrs="{'readonly': [('is_allowed_group_user', '=', False)]}"/>
         </xpath> 
 
         <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
