@@ -18,8 +18,8 @@ class UnitEnseigneConfig(models.Model):
         self.global_insc_stored = global_insc_stored
         return global_insc_stored
 
-    ue_state = fields.Selection(string="STATUT UE ACTUEL", selection=SELECTION_STATE, default="pre-inscription", tracking=True, track_visibility='always')
-    ue_state_modif = fields.Selection(string="STATUT UE Suivant", selection='_get_selection_state', tracking=True, track_visibility='always')
+    ue_state = fields.Selection(string="Statut ue actuel", selection=SELECTION_STATE, default="pre-inscription", tracking=True, track_visibility='always')
+    ue_state_modif = fields.Selection(string="Statut ue suivant", selection='_get_selection_state', tracking=True, track_visibility='always')
     is_allowed_group_user = fields.Boolean(string="Groups", compute="compute_groupes")
     global_insc_stored = fields.Many2one("inscription.edu", string="Etudiants", compute="get_global_insc_stored", default=get_default_global_insc, store=True)
 
