@@ -99,7 +99,7 @@
                                             <br/>
                                             <t t-foreach="range(7,14)" t-as="i">
                                                 <t t-if="len(ue_ids)>i">
-                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.name"/><br/>
+                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.code"/><br/>
                                                 </t>
                                                 <t t-else="">
                                                     <t t-esc="i+1"/>-..............................<br/>
