@@ -82,13 +82,13 @@
                                         <td style="width:;">
                                             <br/>
                                             ................................................<br/>
-                                            .......................(<span t-esc="len(ue_ids)"/>)......................
+                                            ....................(<span t-esc="len(ue_ids)"/>)...................
                                         </td>
                                         <td style="width:17%;">
                                             <br/>
                                             <t t-foreach="range(0,7)" t-as="i">
                                                 <t t-if="len(ue_ids)>i">
-                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.name"/><br/>
+                                                    <t t-esc="i+1"/>- <t t-esc="ue_ids[i].name.code"/><br/>
                                                 </t>
                                                 <t t-else="">
                                                     <t t-esc="i+1"/>-..............................<br/>
@@ -162,7 +162,7 @@
                                         <td>
                                             N°
                                             <t t-if="o.journal_id.type == 'bank'">
-                                                <t t-esc="o.partner_bank_account_id.acc_number"/> 
+                                                <t t-esc="o.partner_bank_account_id.acc_number or '.............................................................................................................'"/> 
                                             </t>
                                             <t t-else="">
                                             .............................................................................................................

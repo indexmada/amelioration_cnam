@@ -104,4 +104,6 @@ class AccountPaymen(models.Model):
 
 	def get_ue_list(self, invoice_ids):
 		unit_enseigne_ids = self.env['unit.enseigne'].sudo().search([('invoice_id', 'in', invoice_ids.ids)])
+		if not unit_enseigne_ids:
+			unit_enseigne_ids = invoice_ids.mapped('inscription_id').mapped('units_enseignes')
 		return unit_enseigne_ids
