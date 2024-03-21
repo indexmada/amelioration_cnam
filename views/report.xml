@@ -26,7 +26,7 @@
                             </t>
                             <t t-set="notes" t-value="env['note.list'].sudo().get_note_by_student(o.sudo().partner_id.id)"/>
                             <div t-if="notes" class="page" style="font-family: 'arial';">
-                                <strong><u> Réf :</u></strong>
+                                <!-- <strong><u> Réf :</u></strong> -->
                                 <div class="text-center"><h4><strong>  ATTESTATION DE REUSSITE  </strong></h4></div>
                                 <br/>
                                 <div> Le Directeur du centre <strong>C</strong>onservatoire <strong>N</strong>ational des <strong>A</strong>rts et <strong>M</strong>étiers Madagascar atteste que:
