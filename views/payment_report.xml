@@ -70,7 +70,7 @@
                             <t t-set="ue_ids" t-value="o.get_ue_list(o.invoice_ids)"/>
                             <div> Reçu de M: <strong t-field="o.partner_id"/> </div>
                             <div> N° Auditeur: <strong t-esc="insc_id.name"/> </div>
-                            <div> Filière: <strong t-esc="insc_id.faculty_id.name"/> </div>
+                            <div> Formation: <strong t-esc="insc_id.formation_id.name"/> </div>
                             <div> En règlement de: <strong t-esc="insc_id.faculty_id.name"/> </div>
                             <div style="padding-left: 30px;">
                                 <table style="border: 0px; width: 95%;">
