@@ -84,7 +84,7 @@ class UnitEnseigneConfig(models.Model):
 
     @api.onchange("name")
     def change_domaine(self):
-        return {'domain':{'semestre_id':[('id','=',self.name.semestre_id.id)]}}
+        return {'domain':{'semestre_id':[('id','in',self.name.semestre_ids_new.ids)]}}
         
 
     @api.depends('inscription_id', 'inscription_other_id')    
