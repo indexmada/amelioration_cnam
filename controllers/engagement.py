@@ -252,7 +252,7 @@ class RecapEngagement(http.Controller):
                     else:
                         amount_total = insc.amount_total_euro
                     amount_total = round(amount_total, 2)
-                    worksheet_ost.write(cell, '{:,}' .format(amount_total), cell_center_12)
+                    worksheet_ost.write(cell, '{:,.2f}' .format(amount_total), cell_center_12)
 
                     # Amount Paid
                     cell = "D"+str(line)
@@ -263,7 +263,7 @@ class RecapEngagement(http.Controller):
                         currency_val = currency_euro
                         paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_euro))
                     paid = round(paid, 2)
-                    worksheet_ost.write(cell, '{:,}' .format(paid) if paid else '-', cell_bold_right_12)
+                    worksheet_ost.write(cell, '{:,.2f}' .format(paid) if paid else '-', cell_bold_right_12)
 
                     # Amount Remain to pay
                     cell = "E"+str(line)
@@ -272,7 +272,7 @@ class RecapEngagement(http.Controller):
                     else:
                         remain = insc.remain_to_pay_euro
                     remain = round(remain, 2)
-                    worksheet_ost.write(cell, '{:,}' .format(remain) if remain else '-', cell_bold_right_12)
+                    worksheet_ost.write(cell, '{:,.2f}' .format(remain) if remain else '-', cell_bold_right_12)
 
                     col = 4
                     temp = 6
@@ -291,7 +291,7 @@ class RecapEngagement(http.Controller):
                         # Montant
                         col += 1
                         cell = row_tab[col]+str(line)
-                        worksheet_ost.write(cell, '{:,}' .format(round(payment.cost_devise, 2)) if payment else '', cell_right_12)
+                        worksheet_ost.write(cell, '{:,.2f}' .format(round(payment.cost_devise, 2)) if payment else '', cell_right_12)
                         
                         # Date Payment
                         col += 1
@@ -306,7 +306,7 @@ class RecapEngagement(http.Controller):
                         # DEJA PAYE
                         col += 1
                         cell = row_tab[col]+str(line)
-                        worksheet_ost.write(cell, '{:,}' .format(round(payment.cost_devise,2)) if payment and payment.payment_state == True else '', cell_right_12)
+                        worksheet_ost.write(cell, '{:,.2f}' .format(round(payment.cost_devise,2)) if payment and payment.payment_state == True else '', cell_right_12)
                         temp += 1
 
                         # Report
@@ -421,7 +421,7 @@ class RecapEngagement(http.Controller):
 
                 cell = "C"+str(line)
                 amount = insc.amount_total_ariary if creance == "Creance Ariary" else insc.amount_total_euro
-                worksheet_ost.write(cell, '{:,}' .format(round(amount,2)), cell_right_11)
+                worksheet_ost.write(cell, '{:,.2f}' .format(round(amount,2)), cell_right_11)
 
                 cell = "D"+str(line)
                 worksheet_ost.write(cell, '', cell_left_11)
@@ -433,19 +433,19 @@ class RecapEngagement(http.Controller):
 
                 cell = "F"+str(line)
                 paid_amount = sum( l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda pay: pay.currency_id == currency_val))
-                worksheet_ost.write(cell, '{:,}' .format(round(paid_amount,2)), cell_right_11)
+                worksheet_ost.write(cell, '{:,.2f}' .format(round(paid_amount,2)), cell_right_11)
 
                 cell = "G"+str(line)
                 remain = insc.remain_to_pay_ariary if creance == "Creance Ariary" else insc.remain_to_pay_euro
                 x_total_remain += remain
-                worksheet_ost.write(cell, '{:,}' .format(round(remain,2)),cell_right_11)
+                worksheet_ost.write(cell, '{:,.2f}' .format(round(remain,2)),cell_right_11)
 
                 cell = "H"+str(line)
                 worksheet_ost.write(cell, '', cell_left_11)
                 line += 1
 
             cell = "G"+str(line)
-            worksheet_ost.write(cell, '{:,}' .format(round(x_total_remain,2)), cell_right_grey_11)
+            worksheet_ost.write(cell, '{:,.2f}' .format(round(x_total_remain,2)), cell_right_grey_11)
             line += 3
 
 

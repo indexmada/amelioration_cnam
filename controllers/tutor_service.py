@@ -140,7 +140,7 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
             worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
             worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
-            worksheet_ost.write("D18", '{:,}' .format(service_id.amount), cell_tot_1)
+            worksheet_ost.write("D18", '{:,.2f}' .format(service_id.amount), cell_tot_1)
             worksheet_ost.write("E18", "", dg_cell_center_11)
 
             worksheet_ost.write("A19", service_id.tutor_id.name, dg_cell_center_11)
@@ -165,7 +165,7 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A22", "TOTAL", cell_center_11_bold)
             worksheet_ost.write("B22", "", cell_center_11_bold)
             worksheet_ost.write("C22", "", cell_center_11_bold)
-            worksheet_ost.write("D22", '{:,}' .format(service_id.amount), cell_right_11_bold)
+            worksheet_ost.write("D22", '{:,.2f}' .format(service_id.amount), cell_right_11_bold)
             worksheet_ost.write("E22", "", cell_center_11_bold)
 
             currency_ariary = request.env.ref('base.MGA')
@@ -331,19 +331,19 @@ class TutorServiceController(http.Controller):
 
                     nb_hours = '{0:02.0f}h{1:02.0f}'.format(*divmod(float(service.nb_hours) * 60, 60))
                     worksheet_ost.write("E"+str(line), nb_hours, cell_center_11)
-                    worksheet_ost.write("F"+str(line), '{:,}' .format(service.hourly_rate), cell_center_11)
-                    worksheet_ost.write("G"+str(line), '{:,}' .format(service.rate_deposit), cell_center_11)
+                    worksheet_ost.write("F"+str(line), '{:,.2f}' .format(service.hourly_rate), cell_center_11)
+                    worksheet_ost.write("G"+str(line), '{:,.2f}' .format(service.rate_deposit), cell_center_11)
                     worksheet_ost.write("H"+str(line), service.nb_hours_passed, cell_center_11)
-                    worksheet_ost.write("I"+str(line), '{:,}' .format(service.amount), cell_center_11)
+                    worksheet_ost.write("I"+str(line), '{:,.2f}' .format(service.amount), cell_center_11)
 
                     # Acc Fin
                     acc_fin = service.nb_hours_passed * service.hourly_rate
-                    worksheet_ost.write("J"+str(line), '{:,}' .format(acc_fin), cell_center_11)
-                    worksheet_ost.write("K"+str(line), '{:,}' .format(acc_fin), cell_center_11)
+                    worksheet_ost.write("J"+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
+                    worksheet_ost.write("K"+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
                     worksheet_ost.write("L"+str(line), '', cell_center_11)
 
                     remain_to_pay = service.amount - acc_fin
-                    worksheet_ost.write("M"+str(line), '{:,}' .format(remain_to_pay), cell_center_11)
+                    worksheet_ost.write("M"+str(line), '{:,.2f}' .format(remain_to_pay), cell_center_11)
                     total_nb_hours += service.nb_hours
                     total_hourly_rate += service.hourly_rate
                     total_rate_deposit += service.rate_deposit
@@ -360,12 +360,12 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.write("C"+str(line), "", cell_center_bold_11_italic)
                 worksheet_ost.write("D"+str(line), "", cell_center_bold_11_italic)
                 worksheet_ost.write("E"+str(line), total_nb_hours, cell_center_bold_11_italic)
-                worksheet_ost.write("F"+str(line), '{:,}' .format(total_hourly_rate), cell_center_bold_11_italic)
-                worksheet_ost.write("G"+str(line), '{:,}' .format(total_rate_deposit), cell_center_bold_11_italic)
+                worksheet_ost.write("F"+str(line), '{:,.2f}' .format(total_hourly_rate), cell_center_bold_11_italic)
+                worksheet_ost.write("G"+str(line), '{:,.2f}' .format(total_rate_deposit), cell_center_bold_11_italic)
                 worksheet_ost.write("H"+str(line), total_nb_hours_passed, cell_center_bold_11_italic)
-                worksheet_ost.write("I"+str(line), '{:,}' .format(total_service_amount), cell_center_bold_11_italic)
-                worksheet_ost.write("J"+str(line), '{:,}' .format(total_acc_fin), cell_center_bold_11_italic)
-                worksheet_ost.write("K"+str(line), '{:,}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                worksheet_ost.write("I"+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_italic)
+                worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_italic)
+                worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
                 worksheet_ost.write("L"+str(line), '', cell_center_bold_11_italic)
                 worksheet_ost.write("M"+str(line), total_remain_to_pay, cell_center_bold_11_italic)
 
@@ -385,9 +385,9 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.write("F"+str(line), '', cell_center_bold_11_grey)
                 worksheet_ost.write("G"+str(line), '', cell_center_bold_11_grey)
                 worksheet_ost.write("H"+str(line), total_nb_hours_passed, cell_center_bold_11_grey)
-                worksheet_ost.write("I"+str(line), '{:,}' .format(total_service_amount), cell_center_bold_11_grey)
-                worksheet_ost.write("J"+str(line), '{:,}' .format(total_acc_fin), cell_center_bold_11_yellow)
-                worksheet_ost.write("K"+str(line), '{:,}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                worksheet_ost.write("I"+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_grey)
+                worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
                 worksheet_ost.write("L"+str(line), '', cell_center_bold_11_grey)
                 worksheet_ost.write("M"+str(line), total_remain_to_pay, cell_center_bold_11_grey)
 

@@ -288,12 +288,12 @@ class RecapEngagement(http.Controller):
                     for ue in (insc.units_enseignes + insc.other_ue_ids):
                         worksheet_ost.write(row_tab[i]+str(line), ue.name.code, cell_left_10)
                         if ue.currency_id.name == "MGA":
-                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(ue.cost_ariary, 2)), cell_right_10)
+                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(ue.cost_ariary, 2)), cell_right_10)
                             worksheet_ost.write(row_tab[i+2]+str(line), '', cell_right_10)
                             total_mga += ue.cost_ariary
                         else:
                             worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
-                            worksheet_ost.write(row_tab[i+2]+str(line), '{:,}' .format(round(ue.cost_devise, 2)), cell_right_10)
+                            worksheet_ost.write(row_tab[i+2]+str(line), '{:,.2f}' .format(round(ue.cost_devise, 2)), cell_right_10)
                             total_currency += ue.cost_devise
                         i += 3
                         t += 1
@@ -316,11 +316,11 @@ class RecapEngagement(http.Controller):
                     if insc.dib:
                         # worksheet_ost.write(row_tab[i]+str(line), "DIB", cell_left_10)
                         if insc.dib_currency_id.name == "MGA":
-                            worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
+                            worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(insc.amount_dib, 2)), cell_right_10)
                             worksheet_ost.write(row_tab[i+1]+str(line), '', cell_right_10)
                         else:
                             worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10)
-                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(insc.amount_dib, 2)), cell_right_10)
+                            worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(insc.amount_dib, 2)), cell_right_10)
 
                     else: 
                         # worksheet_ost.write(row_tab[i]+str(line), "", cell_left_10)
@@ -340,8 +340,8 @@ class RecapEngagement(http.Controller):
                     i += 2
 
                     # TOTAL GENERAL
-                    worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga, 2)),cell_right_10)
-                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_currency, 2)),cell_right_10)
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(total_mga, 2)),cell_right_10)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(total_currency, 2)),cell_right_10)
 
                     # TOTAL UE
                     total_ue = len(insc.units_enseignes + insc.other_ue_ids)
@@ -355,16 +355,16 @@ class RecapEngagement(http.Controller):
                     x_total_currency += total_currency
                     n_order += 1
 
-                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(x_total_mga, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(x_total_currency, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(x_total_mga, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(x_total_currency, 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+2]+str(line), ue_count, cell_right_10)
 
                 line += 2
                 # Total arrêté ce: jj/mm/AAAA
                 worksheet_ost.write(row_tab[i-4]+str(line), "Total arrêté ce:", center_10)
                 worksheet_ost.write(row_tab[i-3]+str(line), datetime.strftime(insc_date, "%d/%m/%Y"), right_10)
-                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(x_total_mga, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(x_total_currency, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(x_total_mga, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(x_total_currency, 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+2]+str(line), ue_count, cell_right_10)
 
 
@@ -387,8 +387,8 @@ class RecapEngagement(http.Controller):
                     ue1_ids = insc1_ids.mapped('units_enseignes') + insc1_ids.mapped('other_ue_ids')
                     total_mga1 = sum(x.cost_ariary for x in ue1_ids.filtered(lambda u: u.currency_id.name=='MGA'))
                     total_devise1 = sum(x.cost_devise for x in ue1_ids.filtered(lambda u: u.currency_id.name!='MGA'))
-                    worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga1, 2)), cell_right_10_yellow)
-                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise1, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(total_mga1, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(total_devise1, 2)), cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+2]+str(line), len(ue1_ids), cell_right_10_yellow)
                 else:
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
@@ -398,8 +398,8 @@ class RecapEngagement(http.Controller):
                 # ECART1
                 line += 1
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
-                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga1 - x_total_mga), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise1 - x_total_currency), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga1 - x_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise1 - x_total_currency), 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue1_ids)), cell_right_10)
 
                 # Année 2
@@ -416,8 +416,8 @@ class RecapEngagement(http.Controller):
                     ue2_ids = insc2_ids.mapped('units_enseignes') + insc2_ids.mapped('other_ue_ids')
                     total_mga2 = sum(x.cost_ariary for x in ue2_ids.filtered(lambda u: u.currency_id.name=='MGA'))
                     total_devise2 = sum(x.cost_devise for x in ue2_ids.filtered(lambda u: u.currency_id.name!='MGA'))
-                    worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(total_mga2, 2)), cell_right_10_yellow)
-                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(total_devise2, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(total_mga2, 2)), cell_right_10_yellow)
+                    worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(total_devise2, 2)), cell_right_10_yellow)
                     worksheet_ost.write(row_tab[i+2]+str(line), len(ue2_ids), cell_right_10_yellow)
                 else:
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_right_10_yellow)
@@ -427,8 +427,8 @@ class RecapEngagement(http.Controller):
                 # ECART2
                 line += 1
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
-                worksheet_ost.write(row_tab[i]+str(line), '{:,}' .format(round(abs(total_mga2 - x_total_mga), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,}' .format(round(abs(total_devise2 - x_total_currency), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga2 - x_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise2 - x_total_currency), 2)), cell_right_10)
                 worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue2_ids)), cell_right_10)
                 
                 line += 2
