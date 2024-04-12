@@ -107,3 +107,11 @@ class AccountPaymen(models.Model):
 		if not unit_enseigne_ids:
 			unit_enseigne_ids = invoice_ids.mapped('inscription_id').mapped('units_enseignes')
 		return unit_enseigne_ids
+
+	@api.model
+	def create(self, vals):
+		res = super(AccountPaymen, self).create(vals)
+		if res.payment_inscription_ids:
+			for pay in res.payment_inscription_ids:
+				res.payment_inscription_ids.write({"state": "paid"})
+		return res
