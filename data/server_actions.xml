@@ -148,4 +148,13 @@
             action = records.action_generate_report_payroll()
         </field>
     </record>
+
+    <record id="payment_insc_state_update" model="ir.actions.server">
+        <field name="name">Mettre à jour Etat de paiment</field>
+        <field name="model_id" ref="edu_management.model_inscription_edu"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.p_update_pay_insc_state()
+        </field>
+    </record>
 </odoo>

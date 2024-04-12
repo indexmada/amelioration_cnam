@@ -171,6 +171,24 @@ class InscriptionEdu(models.Model):
                     template.with_context(context).send_mail(insc.id, force_send=True, raise_exception=True)
                     values = template.generate_email(insc.id)
 
+    def p_update_pay_insc_state(self, **kw):
+        for rec in self.mapped('payment_inscription_ids'):
+            state = None
+            if rec.report_irrec: 
+                state = 'irrecouvrable'
+            else:
+                if rec.remain_to_pay_payment <= 0:
+                    state = 'paid'
+                else:
+                    if rec.inscription_id.insc_demande_report == True and rec.report_date:
+                        if rec.report_granted:
+                            state = 'granted'
+                        else:
+                            state = 'request'
+                    else:
+                        state = 'non-paid'
+            rec.write({'state': state})
+
     def open_student_info(self):
         if not self.student_id:
             return False
