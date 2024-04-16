@@ -60,6 +60,10 @@
             <field name="num_engagement"/>
             <field name="insc_demande_report"/>
         </xpath>
+        <field name="remain_to_pay_euro" position="after">
+            <field name="total_amount_du_ariary"/>
+            <field name="total_amount_du_euro"/>
+        </field>
       </field>
     </record>
 

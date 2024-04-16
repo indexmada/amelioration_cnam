@@ -258,19 +258,19 @@ class RecapEngagement(http.Controller):
                     cell = "D"+str(line)
                     if creance == "Creance Ariary":
                         currency_val = currency_ariary
-                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_ariary))
+                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_ariary and p.state == 'paid'))
                     else:
                         currency_val = currency_euro
-                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_euro))
+                        paid = sum(l.cost_devise for l in insc.payment_inscription_ids.filtered(lambda p: p.currency_id == currency_euro and p.state == 'paid'))
                     paid = round(paid, 2)
                     worksheet_ost.write(cell, '{:,.2f}' .format(paid) if paid else '-', cell_bold_right_12)
 
                     # Amount Remain to pay
                     cell = "E"+str(line)
                     if creance == 'Creance Ariary':
-                        remain = insc.remain_to_pay_ariary
+                        remain = insc.total_amount_du_ariary
                     else:
-                        remain = insc.remain_to_pay_euro
+                        remain = insc.total_amount_du_euro
                     remain = round(remain, 2)
                     worksheet_ost.write(cell, '{:,.2f}' .format(remain) if remain else '-', cell_bold_right_12)
 
@@ -436,7 +436,7 @@ class RecapEngagement(http.Controller):
                 worksheet_ost.write(cell, '{:,.2f}' .format(round(paid_amount,2)), cell_right_11)
 
                 cell = "G"+str(line)
-                remain = insc.remain_to_pay_ariary if creance == "Creance Ariary" else insc.remain_to_pay_euro
+                remain = insc.total_amount_du_ariary if creance == "Creance Ariary" else insc.total_amount_du_euro
                 x_total_remain += remain
                 worksheet_ost.write(cell, '{:,.2f}' .format(round(remain,2)),cell_right_11)
 

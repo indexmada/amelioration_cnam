@@ -129,6 +129,26 @@ class InscriptionEdu(models.Model):
 
     ue_not_used = fields.Many2many(comodel_name="unit.enseigne.config", string="UE NOT USER", compute="compute_ue_not_used", store=True)
 
+    total_amount_du_ariary = fields.Float(string="Non soldé Ariary", compute="compute_sold")
+    total_amount_du_euro = fields.Float(string="Non soldé Euro", compute="compute_sold")
+
+    @api.depends("amount_total_ariary", "amount_total_euro", "payment_inscription_ids.amount", 'payment_inscription_ids.state')
+    def compute_sold(self):
+        currency_euro = self.env.ref('base.EUR')
+        currency_ariary = self.env.ref('base.MGA')
+        for insc in self:
+            paid_ariary = 0
+            paid_euro = 0
+            for line in insc.payment_inscription_ids:
+                if line.currency_id.name == 'MGA' and line.state == 'paid':
+                    paid_ariary = paid_ariary + float(line.cost_devise)
+                elif line.currency_id.name == 'EUR' and line.state == 'paid':
+                    paid_euro = paid_euro + float(line.cost_devise)
+            total_amount_du_euro = insc.amount_euro - paid_euro
+            insc.total_amount_du_euro = total_amount_du_euro if total_amount_du_euro > 0 else 0
+            total_amount_du_ariary = insc.amount_total_ariary - paid_ariary
+            insc.total_amount_du_ariary = total_amount_du_ariary if total_amount_du_ariary > 0 else 0
+
     @api.depends('units_enseignes', 'other_ue_ids', 'formation_id', 'formation_id.units_enseignement_ids')
     def compute_ue_not_used(self):
         for rec in self:
