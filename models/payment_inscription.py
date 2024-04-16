@@ -13,7 +13,7 @@ class PaymentInscription(models.Model):
 	num_engagement = fields.Integer(string="Numéro")
 
 	amount_paid_payment = fields.Monetary(string="Montant Payé", compute = "compute_amount_paid_payment")
-	payment_ids = fields.Many2many(string="Payments", compute="compute_payment_val")
+	payment_ids = fields.Many2many(string="Payments", compute="compute_payment_val", comodel_name="account.payment")
 	remain_to_pay_payment = fields.Monetary(string="Reste à Payer", compute="compute_remain_to_pay")
 
 	month_stored = fields.Char(string="Mois", compute="compute_month_year_stored", store=True)
@@ -48,7 +48,7 @@ class PaymentInscription(models.Model):
 	def compute_payment_val(self):
 		for rec in self:
 			pi_ids = self.env['account.payment'].sudo().search([('state', '!=', 'draft')]).filtered(lambda x: rec in x.payment_inscription_ids)
-			rec.payment_ids = pi_ids.ids
+			rec.payment_ids = [(6, 0, pi_ids.ids)]
 
 	def compute_amount_paid_payment(self):
 		for rec in self:
