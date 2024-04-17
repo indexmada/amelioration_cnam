@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-2 offset-1">
                         <br/><br/>
-                        N° <t t-esc="o.communication or '...................'"/>
+                        <t  t-if="o.communication not in ['Virement', 'Versement']">N°</t> <t t-esc="o.communication or '...................'"/>
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                                         <td colspan="4"/>
                                         <td>
                                             <div style="background-color: #696969; width: 80%; height: 100%; text-align: right; padding: 5px;">
-                                                <strong t-esc="o.amount"/>
+                                                <strong t-esc="'{:,.2f}' .format(round(o.amount, 2))"/>
                                             </div>
                                         </td>
                                     </tr>
@@ -150,9 +150,9 @@
                                             Paiment:
                                         </td>
                                         <td>
-                                            <i t-if="o.journal_id.type == 'bank'" class="fa fa-check-square"/>
+                                            <i t-if="o.journal_id.type == 'bank' and o.communication not in ['Virement', 'Versement']" class="fa fa-check-square"/>
                                             <i t-else="" class="fa fa-square-o"/> Chèque
-                                            <t t-if="o.journal_id.type == 'bank'">
+                                            <t t-if="o.journal_id.type == 'bank' and o.communication not in ['Virement', 'Versement']">
                                                 <t t-esc="o.partner_bank_account_id.bank_id.name"/>
                                             </t>
                                             <t t-else="">.................................</t><br/>
@@ -168,7 +168,13 @@
                                             .............................................................................................................
                                             </t>   
                                             Antananarivo le <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/><br/>
-                                            <i class="fa fa-square-o"/> Autre à préciser: ................................................
+                                            <i class="fa fa-check-square" t-if="o.communication in ['Virement', 'Versement']"/>
+                                            <i class="fa fa-square-o" t-else=""/>
+                                            Autre à préciser: 
+
+                                            <t t-if="o.communication in ['Virement', 'Versement']" t-esc="o.communication"/>
+                                            <t t-else="">................................................
+                                            </t>
                                         </td>
                                     </tr>
                                 </table>
