@@ -296,17 +296,18 @@ class RecapEngagement(http.Controller):
                         # Date Payment
                         col += 1
                         cell = row_tab[col]+str(line)
-                        worksheet_ost.write(cell, payment.report_date if (payment and payment.state == 'granted') else '', cell_right_12)
+                        worksheet_ost.write(cell, str(payment.report_date).replace('-','/') if (payment and payment.state == 'granted') else '', cell_right_12)
                         
                         # N° Reçu
                         col += 1
                         cell = row_tab[col]+str(line)
                         x_payment_ids = payment.payment_ids if payment else False
-                        x_invoice_ids = x_payment_ids.mapped('invoice_ids').filtered(lambda x: x.state != 'draft') if x_payment_ids else False
+                        # x_invoice_ids = x_payment_ids.mapped('invoice_ids').filtered(lambda x: x.state != 'draft') if x_payment_ids else False
                         x_rec_name = ''
-                        if x_invoice_ids:
-                            for inv in x_invoice_ids:
-                                x_rec_name += inv.name if not x_rec_name else ', '+inv.name
+                        if x_payment_ids:
+                            for inv in x_payment_ids:
+                                if inv.communication:
+                                    x_rec_name += inv.communication if not x_rec_name else ', '+inv.communication
                         worksheet_ost.write(cell, x_rec_name, cell_right_12)
 
                         # DEJA PAYE

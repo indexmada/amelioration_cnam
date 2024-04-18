@@ -367,7 +367,7 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_italic)
                 worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
                 worksheet_ost.write("L"+str(line), '', cell_center_bold_11_italic)
-                worksheet_ost.write("M"+str(line), total_remain_to_pay, cell_center_bold_11_italic)
+                worksheet_ost.write("M"+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_italic)
 
                 # Total Général
                 line += 1
@@ -389,7 +389,7 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
                 worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
                 worksheet_ost.write("L"+str(line), '', cell_center_bold_11_grey)
-                worksheet_ost.write("M"+str(line), total_remain_to_pay, cell_center_bold_11_grey)
+                worksheet_ost.write("M"+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_grey)
 
                 worksheet_ost.write("J"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
                 worksheet_ost.write("J"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
