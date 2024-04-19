@@ -115,3 +115,17 @@ class AccountPaymen(models.Model):
 			for pay in res.payment_inscription_ids:
 				res.payment_inscription_ids.write({"state": "paid"})
 		return res
+
+	def get_amount_dib(self, invoice_ids):
+		insc = self.env['inscription.edu'].sudo().search([('dib_invoice_id', 'in', invoice_ids.ids), ('dib', '=', True)])
+		if not insc:
+			return 0
+		amount = insc[0].amount_dib
+		return amount
+
+	def get_amount_reinsc(self, invoice_ids):
+		insc = self.env['inscription.edu'].sudo().search([('reinsc_invoice_id', 'in', invoice_ids.ids), ('reinscription', '=', True)])
+		if not insc:
+			return 0
+		amount = insc[0].amount_rescription
+		return amount

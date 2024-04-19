@@ -38,7 +38,7 @@
                              alt="Logo"/>
 
                         <br/>67Ha Maison des Produits 6ème étage<br/>
-                        Tél: 020 22 290 19 ou +26133 14 259 35 ou +26132 53 015 13<br/>
+                        Tél: +26128 22 290 19 ou +26133 14 259 35 ou +26132 53 015 13<br/>
                         NIF: 3000116569<br/>
                         cnam.madagascar@yahoo.com<br/>
                         www.cnam-madagascar.mg
@@ -68,6 +68,8 @@
                             <t t-set="insc_id" t-value="o.partner_id.get_insc_info()"/>
                             <t t-set="invoice_ids" t-value="o.reconciled_invoice_ids"/>
                             <t t-set="ue_ids" t-value="o.get_ue_list(o.invoice_ids)"/>
+                            <t t-set="amount_dib" t-value="o.get_amount_dib(o.invoice_ids)"/>
+                            <t t-set="amount_reinsc" t-value="o.get_amount_reinsc(o.invoice_ids)"/>
                             <div> Reçu de M: <strong t-field="o.partner_id"/> </div>
                             <div> N° Auditeur: <strong t-esc="insc_id.name"/> </div>
                             <div> Formation: <strong t-esc="insc_id.formation_id.name"/> </div>
@@ -76,7 +78,10 @@
                                 <table style="border: 0px; width: 95%;">
                                     <tr>
                                         <td style="width:20%;">
-                                            <i class="fa fa-square-o"/> Droit individuel de base (DIB):<br/>
+                                            <i t-if="amount_dib and amount_dib > 0" class="fa fa-check-square"/>
+                                            <i t-else="" class="fa fa-square-o"/> Droit individuel de base (DIB)<br/>
+                                            <i t-if="amount_reinsc and amount_reinsc > 0" class="fa fa-check-square"/>
+                                            <i t-else="" class="fa fa-square-o"/> Réinscription<br/>
                                             <i class="fa fa-check-square"/> Unités d'enseignement (UE): 
                                         </td>
                                         <td style="width:;">
@@ -109,7 +114,18 @@
                                         <td style="width: 30px;">
                                         </td>
                                         <td style="width:22%;">
-                                            <t t-foreach="range(0,9)" t-as="i">
+                                            <t t-if="amount_dib">
+                                                <t t-esc="'- DIB: '+'{:,.2f}' .format(amount_dib)"/>
+                                                <br/>
+                                            </t>
+                                            <t t-if="amount_reinsc"> 
+                                                <t t-esc="'- REINSC: '+'{:,.2f}' .format(amount_reinsc)"/>
+                                                <br/>
+                                            </t>
+                                            <t t-if="amount_dib and amount_reinsc" t-set="range_count" t-value="7"/>
+                                            <t t-elif="amount_dib or amount_reinsc" t-set="range_count" t-value="8"/>
+                                            <t t-else="" t-set="range_count" t-value="9"/>
+                                            <t t-foreach="range(0,range_count)" t-as="i">
                                                 -......................................................<br/>
                                             </t>
                                         </td>
