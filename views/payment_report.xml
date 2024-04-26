@@ -38,7 +38,7 @@
                              alt="Logo"/>
 
                         <br/>67Ha Maison des Produits 6ème étage<br/>
-                        Tél: +26128 22 290 19 ou +26133 14 259 35 ou +26132 53 015 13<br/>
+                        Tél: <t t-if="company.phone" t-esc="company.phone"/><t t-else="">+26138 22 290 19 ou +26133 14 259 35 ou +26132 53 015 13</t><br/>
                         NIF: 3000116569<br/>
                         cnam.madagascar@yahoo.com<br/>
                         www.cnam-madagascar.mg
