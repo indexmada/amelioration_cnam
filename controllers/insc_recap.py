@@ -376,8 +376,14 @@ class RecapEngagement(http.Controller):
                 line += 1
                 worksheet_ost.write(row_tab[i-1]+str(line), year_name1, cell_left_10_bold_yellow)
                 d1 = insc_date
-                d2 = date(insc_date.year-1, insc_date.month, insc_date.day)
-                d3 = date(insc_date.year-2, insc_date.month, insc_date.day)
+                try:
+                    d2 = date(insc_date.year-1, insc_date.month, insc_date.day)
+                except:
+                    d2 = date(insc_date.year-1, insc_date.month, insc_date.day - 1)
+                try:
+                    d3 = date(insc_date.year-2, insc_date.month, insc_date.day)
+                except:
+                    d3 = date(insc_date.year-2, insc_date.month, insc_date.day - 1)
                 plage_date = [d1, d2, d3]
                 total_mga1 = 0
                 total_devise1 = 0
