@@ -187,6 +187,15 @@ class RecapEngagement(http.Controller):
             line = 6
             insc_dates = self.remove_duplicate_date(insc_dates)
             number = 1
+            total_total_mga = 0
+            total_total_euro = 0
+            total_total_ue = 0
+            mga_year1 = 0
+            euro_year1 = 0
+            ue_year1 = 0
+            mga_year2 = 0
+            euro_year2 = 0
+            ue_year2 = 0
             for insc_date in insc_dates:
                 worksheet_ost.merge_range("E"+str(line)+":G"+str(line), "RECAPITULATIF DES INSCRIPTIONS "+str(year.name), center_10)
                 line += 1
@@ -361,11 +370,14 @@ class RecapEngagement(http.Controller):
 
                 line += 2
                 # Total arrêté ce: jj/mm/AAAA
+                total_total_mga = total_total_mga + x_total_mga
+                total_total_euro = total_total_euro + x_total_currency
+                total_total_ue = total_total_ue + ue_count
                 worksheet_ost.write(row_tab[i-4]+str(line), "Total arrêté ce:", center_10)
                 worksheet_ost.write(row_tab[i-3]+str(line), datetime.strftime(insc_date, "%d/%m/%Y"), right_10)
-                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(x_total_mga, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(x_total_currency, 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), ue_count, cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(total_total_mga, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(total_total_euro, 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), total_total_ue, cell_right_10)
 
 
                 # Années à comparer
@@ -389,7 +401,12 @@ class RecapEngagement(http.Controller):
                 total_devise1 = 0
                 ue1_ids = []
                 if year_1:
-                    insc1_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_1.id)])
+                    try:
+                        date_first = date(d2.year, date_from.month, date_from.day)
+                    except: 
+                        date_first = date(d2.year, date_from.month, date_from.day-1)
+                    date_last = d2
+                    insc1_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', '>=', date_first), ('inscription_date', '<=', date_last), ('school_year', '=', year_1.id)])
                     ue1_ids = insc1_ids.mapped('units_enseignes') + insc1_ids.mapped('other_ue_ids')
                     total_mga1 = sum(x.cost_ariary for x in ue1_ids.filtered(lambda u: u.currency_id.name=='MGA'))
                     total_devise1 = sum(x.cost_devise for x in ue1_ids.filtered(lambda u: u.currency_id.name!='MGA'))
@@ -404,9 +421,9 @@ class RecapEngagement(http.Controller):
                 # ECART1
                 line += 1
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
-                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga1 - x_total_mga), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise1 - x_total_currency), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue1_ids)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga1 - total_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise1 - total_total_euro), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), abs(len(ue1_ids) - total_total_ue), cell_right_10)
 
                 # Année 2
                 year_name2 = str(int(year_tab[0])-2)+'-'+str(int(year_tab[1])-2)
@@ -418,7 +435,12 @@ class RecapEngagement(http.Controller):
                 total_devise2 = 0
                 ue2_ids = []
                 if year_1:
-                    insc2_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', 'in', plage_date), ('school_year', '=', year_2.id)])
+                    try:
+                        date_first = date(d3.year, date_from.month, date_from.day)
+                    except:
+                        date_first = date(d3.year, date_from.month, date_from.day - 1)
+                    date_last = d3
+                    insc2_ids = request.env['inscription.edu'].sudo().search([('inscription_date', '!=', False), ('inscription_date', '>=', date_first), ('inscription_date', '<=', date_last), ('school_year', '=', year_2.id)])
                     ue2_ids = insc2_ids.mapped('units_enseignes') + insc2_ids.mapped('other_ue_ids')
                     total_mga2 = sum(x.cost_ariary for x in ue2_ids.filtered(lambda u: u.currency_id.name=='MGA'))
                     total_devise2 = sum(x.cost_devise for x in ue2_ids.filtered(lambda u: u.currency_id.name!='MGA'))
@@ -433,9 +455,9 @@ class RecapEngagement(http.Controller):
                 # ECART2
                 line += 1
                 worksheet_ost.write(row_tab[i-1]+str(line), 'ECART', cell_left_14) 
-                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga2 - x_total_mga), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise2 - x_total_currency), 2)), cell_right_10)
-                worksheet_ost.write(row_tab[i+2]+str(line), abs(ue_count - len(ue2_ids)), cell_right_10)
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(round(abs(total_mga2 - total_total_mga), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+1]+str(line), '{:,.2f}' .format(round(abs(total_devise2 - total_total_euro), 2)), cell_right_10)
+                worksheet_ost.write(row_tab[i+2]+str(line), abs(len(ue2_ids) - total_total_ue), cell_right_10)
                 
                 line += 2
 
