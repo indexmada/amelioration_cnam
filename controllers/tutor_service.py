@@ -165,12 +165,12 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A22", "TOTAL", cell_center_11_bold)
             worksheet_ost.write("B22", "", cell_center_11_bold)
             worksheet_ost.write("C22", "", cell_center_11_bold)
-            worksheet_ost.write("D22", '{:,.2f}' .format(service_id.amount), cell_right_11_bold)
+            worksheet_ost.write("D22", '{:,.2f}' .format(service_id.amount_paid), cell_right_11_bold)
             worksheet_ost.write("E22", "", cell_center_11_bold)
 
             currency_ariary = request.env.ref('base.MGA')
 
-            worksheet_ost.write("A25", "Arrêté le présent état à la somme de: "+ currency_ariary.amount_to_text(service_id.amount), left_11)
+            worksheet_ost.write("A25", "Arrêté le présent état à la somme de: "+ currency_ariary.amount_to_text(service_id.amount_paid), left_11)
             worksheet_ost.write("D27", "Antananarivo,", left_11_italic)
 
             worksheet_ost.write("D30", "Le Directeur",center_11)
