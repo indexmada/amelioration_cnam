@@ -140,7 +140,7 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
             worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
             worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
-            worksheet_ost.write("D18", '{:,.2f}' .format(service_id.amount), cell_tot_1)
+            worksheet_ost.write("D18", '{:,.2f}' .format(service_id.amount_paid), cell_tot_1)
             worksheet_ost.write("E18", "", dg_cell_center_11)
 
             worksheet_ost.write("A19", service_id.tutor_id.name, dg_cell_center_11)
