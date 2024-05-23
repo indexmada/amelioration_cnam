@@ -140,7 +140,11 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
             worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
             worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
-            worksheet_ost.write("D18", '{:,.2f}' .format(service_id.amount_deposit), cell_tot_1)
+            if service_id.amount == service_id.amount_paid:
+                amount = service_id.amount - service_id.amount_deposit
+            else: 
+                amount = service_id.amount_deposit
+            worksheet_ost.write("D18", '{:,.2f}' .format(amount), cell_tot_1)
             worksheet_ost.write("E18", "", dg_cell_center_11)
 
             worksheet_ost.write("A19", service_id.tutor_id.name, dg_cell_center_11)
@@ -165,12 +169,12 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A22", "TOTAL", cell_center_11_bold)
             worksheet_ost.write("B22", "", cell_center_11_bold)
             worksheet_ost.write("C22", "", cell_center_11_bold)
-            worksheet_ost.write("D22", '{:,.2f}' .format(service_id.amount_deposit), cell_right_11_bold)
+            worksheet_ost.write("D22", '{:,.2f}' .format(amount), cell_right_11_bold)
             worksheet_ost.write("E22", "", cell_center_11_bold)
 
             currency_ariary = request.env.ref('base.MGA')
 
-            worksheet_ost.write("A25", "Arrêté le présent état à la somme de: "+ currency_ariary.amount_to_text(service_id.amount_deposit), left_11)
+            worksheet_ost.write("A25", "Arrêté le présent état à la somme de: "+ currency_ariary.amount_to_text(amount), left_11)
             worksheet_ost.write("D27", "Antananarivo,", left_11_italic)
 
             worksheet_ost.write("D30", "Le Directeur",center_11)
