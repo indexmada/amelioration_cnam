@@ -14,14 +14,15 @@ from datetime import date
 class TutorServiceController(http.Controller):
 
     @http.route('/web/binary/download_report_payroll_xlsx', auth='public')
-    def download_report_payroll_xlsx(self, str_id=False):
+    def download_report_payroll_xlsx(self, str_id=False, reste=0):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output)
 
         id_tab = [int(x) for x in str_id.split('-')]
         domain = [('id', 'in', id_tab)]
         tutor_service_ids = request.env['tutor.service'].sudo().search(domain)
-        self.report_excel_payroll(workbook, tutor_service_ids)  
+        r = int(reste)
+        self.report_excel_payroll(workbook, tutor_service_ids, r)  
         workbook.close()
         output.seek(0)
 
@@ -31,7 +32,7 @@ class TutorServiceController(http.Controller):
                      ('Content-Disposition', 'attachment; filename=%s;' % file_name)]
         return request.make_response(output, xlsheader)
 
-    def report_excel_payroll(self, workbook, service_ids):
+    def report_excel_payroll(self, workbook, service_ids, reste=0):
         center_11 = workbook.add_format({
             'align': 'center',
             'valign': 'vcenter',
