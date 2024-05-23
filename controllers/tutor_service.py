@@ -140,9 +140,9 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
             worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
             worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
-            if service_id.amount == service_id.amount_paid:
-                amount = service_id.amount - service_id.amount_deposit
-            else: 
+            if reste == 1:
+                amount = service_id.amount_residual
+            else:
                 amount = service_id.amount_deposit
             worksheet_ost.write("D18", '{:,.2f}' .format(amount), cell_tot_1)
             worksheet_ost.write("E18", "", dg_cell_center_11)

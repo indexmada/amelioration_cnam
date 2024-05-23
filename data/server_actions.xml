@@ -148,6 +148,15 @@
             action = records.action_generate_report_payroll()
         </field>
     </record>
+    <!-- Etat de Paie Tuteur -->
+    <record id="tutor_payroll_excel_reste" model="ir.actions.server">
+        <field name="name">Etat de Paie Tuteur ~ Reste</field>
+        <field name="model_id" ref="edu_management.model_tutor_service"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_generate_report_payroll_reste()
+        </field>
+    </record>
 
     <record id="payment_insc_state_update" model="ir.actions.server">
         <field name="name">Mettre à jour Etat de paiment</field>

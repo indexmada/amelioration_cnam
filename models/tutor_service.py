@@ -34,3 +34,15 @@ class TutorService(models.Model):
 			'url': '/web/binary/download_report_payroll_xlsx?str_id='+str_id
 		}
 		return actions
+
+	def action_generate_report_payroll_reste(self):
+		str_id = ''
+		for rec in self:
+			str_id += '-'+str(rec.id) if str_id else str(rec.id)
+
+		actions = {
+			'type': 'ir.actions.act_url',
+			'target': 'current',
+			'url': '/web/binary/download_report_payroll_xlsx?str_id='+str_id+'&reste=1'
+		}
+		return actions
