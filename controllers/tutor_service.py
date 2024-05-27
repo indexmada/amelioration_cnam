@@ -330,7 +330,10 @@ class TutorServiceController(http.Controller):
                     i += 1
 
                 line += 1
-                cell = "A"+str(line)+":M"+str(line)
+                if not intec:
+                    cell = "A"+str(line)+":M"+str(line)
+                else:
+                    cell = "A":+str(line)+":I"+str(line)
                 worksheet_ost.merge_range(cell, tutor_id.name, cell_center_11_green)
 
                 line += 1
@@ -425,6 +428,7 @@ class TutorServiceController(http.Controller):
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
                     elif i in ['Taux Horaire', 'Taux accompte', 'Date Paiement']:
                         worksheet_ost.write(row_tab[i]+str(line), '', cell_style)
+                    i += 1
                 line += 1
                 worksheet_ost.write("E"+str(line), total_nb_hours, cell_center_bold_11_grey)
                 worksheet_ost.write("F"+str(line), '', cell_center_bold_11_grey)
