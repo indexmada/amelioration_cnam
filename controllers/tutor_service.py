@@ -107,7 +107,12 @@ class TutorServiceController(http.Controller):
             })
 
         count = 1
+        tutor_displayed = []
         for service_id in service_ids:
+            if service_id.id in tutor_displayed:
+                continue
+            tutor_displayed.append(service_id.id)
+
             worksheet_ost = workbook.add_worksheet("feuille"+str(count))
             self.payroll_style(worksheet_ost)
             count += 1
