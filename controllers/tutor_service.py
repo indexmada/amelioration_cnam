@@ -140,12 +140,15 @@ class TutorServiceController(http.Controller):
             worksheet_ost.write("A18", "Monsieur", dg_cell_center_11)
             worksheet_ost.write("B18", "Professeur", dg_cell_center_11)
             worksheet_ost.write("C18", "Honoraire", dg_cell_center_11)
-            if element == 'reste':
-                amount = service_id.amount_residual
-            elif element == 'total':
-                amount = service_id.amount
-            else:
-                amount = service_id.amount_deposit
+            amount = 0
+            for service in service_ids.filtered(lambda serv: serv.tutor_id == service_id.tutor_id):
+                if element == 'reste':
+                    amount += service.amount_residual
+                elif element == 'total':
+                    amount += service.amount
+                else:
+                    amount += service.amount_deposit
+                service_ids -= service
             worksheet_ost.write("D18", '{:,.2f}' .format(amount), cell_tot_1)
             worksheet_ost.write("E18", "", dg_cell_center_11)
 
