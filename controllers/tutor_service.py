@@ -415,7 +415,8 @@ class TutorServiceController(http.Controller):
                 i = 0
                 cell_style = cell_center_bold_11_grey
                 for header in header_tab:
-                    if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']: 
+                    if intec and header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']: 
+                        i += 1
                         continue
                     if i in [4, 7, 8, 9, 10, 12]:
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
