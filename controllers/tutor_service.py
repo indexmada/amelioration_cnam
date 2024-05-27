@@ -413,18 +413,18 @@ class TutorServiceController(http.Controller):
 
                 # Total Général
                 line += 1
-                worksheet_ost.merge_range("A"+str(line)+":D"+str(line+1), "TOTAL GENERAL", cell_center_bold_11_grey)
                 i = 0
+                worksheet_ost.merge_range("A"+str(line)+":D"+str(line+1), "TOTAL GENERAL", cell_center_bold_11_grey)
                 cell_style = cell_center_bold_11_grey
                 for header in header_tab:
                     if intec and header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']: 
-                        i += 1
                         continue
-                    if i in [4, 7, 8, 9, 10, 12]:
+                        ["Semestre", "UE", "Debut", "Fin cours", "Nb heures", "Taux Horaire", "Taux accompte", "Heure Passer", 
+                            "M.à payer", "Acc Fin", "Payé", "Date Paiement", "Reste à Payer"]
+                    if header in ['Nb heures', 'Heure Passer', 'M.à payer', 'Acc Fin', 'Acc Fin', "Reste à Payer"]:
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
-                    elif i in [5, 6, 11]:
+                    elif i in ['Taux Horaire', 'Taux accompte', 'Date Paiement']:
                         worksheet_ost.write(row_tab[i]+str(line), '', cell_style)
-                    i += 1
                 line += 1
                 worksheet_ost.write("E"+str(line), total_nb_hours, cell_center_bold_11_grey)
                 worksheet_ost.write("F"+str(line), '', cell_center_bold_11_grey)
@@ -459,7 +459,7 @@ class TutorServiceController(http.Controller):
         worksheet.set_column("E:E", 10)
         worksheet.set_column("F:F", 12)
         worksheet.set_column("G:G", 14)
-        worksheet.set_column("H:H", 12)
+        worksheet.set_column("H:H", 16)
         worksheet.set_column("I:I", 14)
         worksheet.set_column("J:J", 16)
         worksheet.set_column("K:M", 14)
