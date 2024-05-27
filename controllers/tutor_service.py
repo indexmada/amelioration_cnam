@@ -319,7 +319,12 @@ class TutorServiceController(http.Controller):
             tutor_ids = tutor_service_ids.mapped('tutor_id')
             for tutor_id in tutor_ids:
                 i = 0
+                intec = service_ids[0].org_select == 'intec'
+                service_ids = tutor_service_ids.filtered(lambda x: x.tutor_id == tutor_id)
                 for header in header_tab:
+                    if service_ids and service_ids[0].org_select == 'intec':
+                        if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']:
+                            continue
                     cell_style = cell_center_bold_11_yellow if header == "Payé" else cell_center_bold_11
                     worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
                     i += 1
@@ -329,7 +334,6 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.merge_range(cell, tutor_id.name, cell_center_11_green)
 
                 line += 1
-                service_ids = tutor_service_ids.filtered(lambda x: x.tutor_id == tutor_id)
                 total_nb_hours = 0
                 total_hourly_rate = 0
                 total_rate_deposit = 0
@@ -346,18 +350,28 @@ class TutorServiceController(http.Controller):
                     nb_hours = '{0:02.0f}h{1:02.0f}'.format(*divmod(float(service.nb_hours) * 60, 60))
                     worksheet_ost.write("E"+str(line), nb_hours, cell_center_11)
                     worksheet_ost.write("F"+str(line), '{:,.2f}' .format(service.hourly_rate), cell_center_11)
-                    worksheet_ost.write("G"+str(line), '{:,.2f}' .format(service.rate_deposit), cell_center_11)
-                    worksheet_ost.write("H"+str(line), service.nb_hours_passed, cell_center_11)
-                    worksheet_ost.write("I"+str(line), '{:,.2f}' .format(service.amount), cell_center_11)
+                    i = 6
+                    if not intec:
+                        worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(service.rate_deposit), cell_center_11)
+                        i+= 1
+                    worksheet_ost.write(row_tab[i]+str(line), service.nb_hours_passed, cell_center_11)
+                    i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(service.amount), cell_center_11)
+                    i += 1
 
                     # Acc Fin
-                    acc_fin = service.nb_hours_passed * service.hourly_rate
-                    worksheet_ost.write("J"+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
-                    worksheet_ost.write("K"+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
-                    worksheet_ost.write("L"+str(line), '', cell_center_11)
+                    if not intec:
+                        acc_fin = service.nb_hours_passed * service.hourly_rate
+                        worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
+                        i += 1
+                        worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
+                        i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_center_11)
+                    i += 1
 
-                    remain_to_pay = service.amount - acc_fin
-                    worksheet_ost.write("M"+str(line), '{:,.2f}' .format(remain_to_pay), cell_center_11)
+                    if not intec:
+                        remain_to_pay = service.amount - acc_fin
+                        worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(remain_to_pay), cell_center_11)
                     total_nb_hours += service.nb_hours
                     total_hourly_rate += service.hourly_rate
                     total_rate_deposit += service.rate_deposit
@@ -375,13 +389,25 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.write("D"+str(line), "", cell_center_bold_11_italic)
                 worksheet_ost.write("E"+str(line), total_nb_hours, cell_center_bold_11_italic)
                 worksheet_ost.write("F"+str(line), '{:,.2f}' .format(total_hourly_rate), cell_center_bold_11_italic)
-                worksheet_ost.write("G"+str(line), '{:,.2f}' .format(total_rate_deposit), cell_center_bold_11_italic)
-                worksheet_ost.write("H"+str(line), total_nb_hours_passed, cell_center_bold_11_italic)
-                worksheet_ost.write("I"+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_italic)
-                worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_italic)
-                worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
-                worksheet_ost.write("L"+str(line), '', cell_center_bold_11_italic)
-                worksheet_ost.write("M"+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_italic)
+                i = 6
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_rate_deposit), cell_center_bold_11_italic)
+                    i += 1
+                worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_italic)
+                i += 1
+
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_italic)
+                i += 1
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_italic)
+                    i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                    i += 1
+                worksheet_ost.write(row_tab[i]+str(line), '', cell_center_bold_11_italic)
+                i += 1
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_italic)
+                    i += 1
 
                 # Total Général
                 line += 1
@@ -389,6 +415,8 @@ class TutorServiceController(http.Controller):
                 i = 0
                 cell_style = cell_center_bold_11_grey
                 for header in header_tab:
+                    if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']: 
+                        continue
                     if i in [4, 7, 8, 9, 10, 12]:
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
                     elif i in [5, 6, 11]:
@@ -397,16 +425,30 @@ class TutorServiceController(http.Controller):
                 line += 1
                 worksheet_ost.write("E"+str(line), total_nb_hours, cell_center_bold_11_grey)
                 worksheet_ost.write("F"+str(line), '', cell_center_bold_11_grey)
-                worksheet_ost.write("G"+str(line), '', cell_center_bold_11_grey)
-                worksheet_ost.write("H"+str(line), total_nb_hours_passed, cell_center_bold_11_grey)
-                worksheet_ost.write("I"+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_grey)
-                worksheet_ost.write("J"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
-                worksheet_ost.write("K"+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
-                worksheet_ost.write("L"+str(line), '', cell_center_bold_11_grey)
-                worksheet_ost.write("M"+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_grey)
-
-                worksheet_ost.write("J"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
-                worksheet_ost.write("J"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
+                i = 6
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '', cell_center_bold_11_grey)
+                    i += 1
+                worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_grey)
+                i += 1
+                worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_yellow if intec else cell_center_bold_11_grey)
+                i += 1
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                    i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_acc_fin), cell_center_bold_11_yellow)
+                    i += 1
+                worksheet_ost.write(row_tab[i]+str(line), '', cell_center_bold_11_grey)
+                i += 1
+                if not intec:
+                    worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_remain_to_pay), cell_center_bold_11_grey)
+                    i += 1
+                if not intec:
+                    worksheet_ost.write("J"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
+                    worksheet_ost.write("J"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
+                else:
+                    worksheet_ost.write("H"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
+                    worksheet_ost.write("H"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
                 line += 5
 
     def style(self, worksheet):
