@@ -323,7 +323,7 @@ class TutorServiceController(http.Controller):
                 intec = service_ids[0].org_select == 'intec'
                 for header in header_tab:
                     if service_ids and service_ids[0].org_select == 'intec':
-                        if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']:
+                        if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer', 'Heure Passer']:
                             continue
                     cell_style = cell_center_bold_11_yellow if header == "Payé" else cell_center_bold_11
                     worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
@@ -357,8 +357,8 @@ class TutorServiceController(http.Controller):
                     if not intec:
                         worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(service.rate_deposit), cell_center_11)
                         i+= 1
-                    worksheet_ost.write(row_tab[i]+str(line), service.nb_hours_passed, cell_center_11)
-                    i += 1
+                        worksheet_ost.write(row_tab[i]+str(line), service.nb_hours_passed, cell_center_11)
+                        i += 1
                     worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(service.amount), cell_center_11)
                     i += 1
 
@@ -398,8 +398,8 @@ class TutorServiceController(http.Controller):
                 if not intec:
                     worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_rate_deposit), cell_center_bold_11_italic)
                     i += 1
-                worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_italic)
-                i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_italic)
+                    i += 1
 
                 worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_italic)
                 i += 1
@@ -420,10 +420,8 @@ class TutorServiceController(http.Controller):
                 worksheet_ost.merge_range("A"+str(line)+":D"+str(line+1), "TOTAL GENERAL", cell_center_bold_11_grey)
                 cell_style = cell_center_bold_11_grey
                 for header in header_tab:
-                    if intec and header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']: 
+                    if intec and header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer', 'Heure Passer']: 
                         continue
-                        ["Semestre", "UE", "Debut", "Fin cours", "Nb heures", "Taux Horaire", "Taux accompte", "Heure Passer", 
-                            "M.à payer", "Acc Fin", "Payé", "Date Paiement", "Reste à Payer"]
                     if header in ['Nb heures', 'Heure Passer', 'M.à payer', 'Acc Fin', 'Acc Fin', "Reste à Payer", 'Payé']:
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
                     elif header in ['Taux Horaire', 'Taux accompte', 'Date Paiement']:
