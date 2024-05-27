@@ -333,7 +333,7 @@ class TutorServiceController(http.Controller):
                 if not intec:
                     cell = "A"+str(line)+":M"+str(line)
                 else:
-                    cell = "A"+str(line)+":I"+str(line)
+                    cell = "A"+str(line)+":H"+str(line)
                 worksheet_ost.merge_range(cell, tutor_id.name, cell_center_11_green)
 
                 line += 1
@@ -434,8 +434,8 @@ class TutorServiceController(http.Controller):
                 if not intec:
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_center_bold_11_grey)
                     i += 1
-                worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_grey)
-                i += 1
+                    worksheet_ost.write(row_tab[i]+str(line), total_nb_hours_passed, cell_center_bold_11_grey)
+                    i += 1
                 worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(total_service_amount), cell_center_bold_11_yellow if intec else cell_center_bold_11_grey)
                 i += 1
                 if not intec:
@@ -452,8 +452,8 @@ class TutorServiceController(http.Controller):
                     worksheet_ost.write("J"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
                     worksheet_ost.write("J"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
                 else:
-                    worksheet_ost.write("H"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
-                    worksheet_ost.write("H"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
+                    worksheet_ost.write("G"+str(line+1), "Montant à payer", cell_center_bold_11_yellow)
+                    worksheet_ost.write("G"+str(line+2), semester_id.name, cell_center_bold_11_yellow)
                 line += 5
 
     def style(self, worksheet):
