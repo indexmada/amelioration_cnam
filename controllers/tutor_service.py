@@ -319,8 +319,8 @@ class TutorServiceController(http.Controller):
             tutor_ids = tutor_service_ids.mapped('tutor_id')
             for tutor_id in tutor_ids:
                 i = 0
-                intec = service_ids[0].org_select == 'intec'
                 service_ids = tutor_service_ids.filtered(lambda x: x.tutor_id == tutor_id)
+                intec = service_ids[0].org_select == 'intec'
                 for header in header_tab:
                     if service_ids and service_ids[0].org_select == 'intec':
                         if header in ['Taux accompte', 'Acc Fin', 'Payé', 'Reste à Payer']:
