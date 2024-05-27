@@ -333,7 +333,7 @@ class TutorServiceController(http.Controller):
                 if not intec:
                     cell = "A"+str(line)+":M"+str(line)
                 else:
-                    cell = "A":+str(line)+":I"+str(line)
+                    cell = "A"+str(line)+":I"+str(line)
                 worksheet_ost.merge_range(cell, tutor_id.name, cell_center_11_green)
 
                 line += 1
