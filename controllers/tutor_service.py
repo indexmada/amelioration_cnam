@@ -360,6 +360,7 @@ class TutorServiceController(http.Controller):
                     i += 1
 
                     # Acc Fin
+                    acc_fin = 0
                     if not intec:
                         acc_fin = service.nb_hours_passed * service.hourly_rate
                         worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(acc_fin), cell_center_11)
@@ -369,6 +370,7 @@ class TutorServiceController(http.Controller):
                     worksheet_ost.write(row_tab[i]+str(line), '', cell_center_11)
                     i += 1
 
+                    remain_to_pay = 0
                     if not intec:
                         remain_to_pay = service.amount - acc_fin
                         worksheet_ost.write(row_tab[i]+str(line), '{:,.2f}' .format(remain_to_pay), cell_center_11)
