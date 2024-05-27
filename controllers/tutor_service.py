@@ -424,7 +424,7 @@ class TutorServiceController(http.Controller):
                         continue
                         ["Semestre", "UE", "Debut", "Fin cours", "Nb heures", "Taux Horaire", "Taux accompte", "Heure Passer", 
                             "M.à payer", "Acc Fin", "Payé", "Date Paiement", "Reste à Payer"]
-                    if header in ['Nb heures', 'Heure Passer', 'M.à payer', 'Acc Fin', 'Acc Fin', "Reste à Payer"]:
+                    if header in ['Nb heures', 'Heure Passer', 'M.à payer', 'Acc Fin', 'Acc Fin', "Reste à Payer", 'Payé']:
                         worksheet_ost.write(row_tab[i]+str(line), header, cell_style)
                     elif header in ['Taux Horaire', 'Taux accompte', 'Date Paiement']:
                         worksheet_ost.write(row_tab[i]+str(line), '', cell_style)
