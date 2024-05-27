@@ -141,11 +141,11 @@
 
     <!-- Etat de Paie Tuteur -->
     <record id="tutor_payroll_excel" model="ir.actions.server">
-        <field name="name">Etat de Paie Tuteur</field>
+        <field name="name">Etat de Paie Tuteur ~ Acompte Fin</field>
         <field name="model_id" ref="edu_management.model_tutor_service"/>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_generate_report_payroll()
+            action = records.action_generate_report_payroll('acc')
         </field>
     </record>
     <!-- Etat de Paie Tuteur -->
@@ -154,7 +154,17 @@
         <field name="model_id" ref="edu_management.model_tutor_service"/>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_generate_report_payroll_reste()
+            action = records.action_generate_report_payroll('reste')
+        </field>
+    </record>
+
+    <!-- Etat de Paie Tuteur -->
+    <record id="tutor_payroll_excel_amount_total" model="ir.actions.server">
+        <field name="name">Etat de Paie Tuteur ~ Montant à Payer</field>
+        <field name="model_id" ref="edu_management.model_tutor_service"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_generate_report_payroll('total')
         </field>
     </record>
 
